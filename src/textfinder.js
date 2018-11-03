@@ -42,6 +42,7 @@ class TextFinder extends Finder {
         : new RegExp(subject.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
 
     while ((match = re.exec(this.content.text)) !== null) {
+      // $FlowFixMe: erroring out on match below for some strange reason
       this.results.push({ length: match[0].length, index: match.index });
     }
   }
