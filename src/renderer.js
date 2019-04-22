@@ -246,6 +246,7 @@ class Renderer extends EventEmitter {
       return;
     }
 
+    this.emit('begin', this.active);
     const active = (this.active = this.queue[0]);
     active.once('end', this.onNext);
     // $FlowFixMe: `content` guaranteed not `null` here
@@ -273,6 +274,7 @@ class Renderer extends EventEmitter {
   }
 
   onNext = (): void => {
+    this.emit('end', this.active);
     this.active = null;
     this.next();
 
