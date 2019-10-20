@@ -1,4 +1,6 @@
 // @flow
+/* eslint-disable no-use-before-define */
+// --
 // FIXME: this module relies heavily on `document.querySelector` and `document.querySelectorAll`
 // methods but suffers from the limitation that it (presently) runs the queries on the wider
 // document's DOM.  This means that, should there ever be a use case for multiple HTML Highlighter
@@ -174,6 +176,29 @@ export function visitDOM(node: Node, callback: ForEachNodeCallback): boolean {
   }
 
   return false;
+}
+
+export function findPreviousTextNode(fromNode: Node): ?Node {
+  let it = fromNode;
+  while (it != null) {
+    if (it.previousSibling == null) {
+      it = it.parentElement;
+      continue;
+    } else {
+      it = it.previousSibling;
+    }
+
+    if (it.nodeType === Node.TEXT_NODE) {
+      return it;
+    }
+
+    const lastNode = findLastTextNode((it: any));
+    if (lastNode != null) {
+      return lastNode;
+    }
+  }
+
+  return null;
 }
 
 /**
