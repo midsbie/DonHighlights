@@ -1,10 +1,10 @@
 // @flow
 
-import { findLastTextNode } from './dom';
+import { findPreviousTextNode, findLastTextNode } from './dom';
 
 export type RangeBoundaryPoint = {| node: Node, offset: number |};
 
-function getNormalizedStartBoundaryPoint(range: Range): RangeBoundaryPoint {
+export function getNormalizedStartBoundaryPoint(range: Range): RangeBoundaryPoint {
   let node, offset;
   node = range.startContainer;
   offset = range.startOffset;
@@ -19,13 +19,60 @@ function getNormalizedStartBoundaryPoint(range: Range): RangeBoundaryPoint {
   return { node, offset };
 }
 
-function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint {
+/**
+ * Skip whitespace at the end of a given node
+ *
+ * Traverses the tree in reverse direction until the first non-whitespace character is found.  Only
+ * the text of the start node until the given offset is considered.
+ *
+ * Throws an exception if it can't find a text node before the start node containing regular
+ * characters.
+ *
+ * @param {Node} node - Text node to start at
+ * @param {number} offset - Offset in the start node's text
+ *
+ * @returns {RangeBoundaryPoint} Range boundary point
+ */
+function skipEndWhitespace(node: Node, offset: number): RangeBoundaryPoint {
+  if (node.nodeType !== Node.TEXT_NODE) {
+    throw new Error('Start node not text type');
+  }
+
+  // If the start node selection (thus up to nth char given by offset) contains non-whitespace
+  // characters, adjust offset accordingly and return.
+  if (offset > 0) {
+    const match = node.textContent.slice(0, offset).match(/[^\s][\s]*$/);
+    if (match != null) {
+      // $FlowFixMe: `match` contains an `index` property, as per the standard.
+      return { node, offset: match.index + 1 };
+    }
+  }
+
+  // Given start node selection is either empty (offset is 0) or all characters are whitespace,
+  // which means we must look for the most recent text node that contains regular characters.
+  let it = node;
+  it = findPreviousTextNode(it);
+
+  while (it != null) {
+    const match = it.textContent.match(/[^\s][\s]*$/);
+    if (match != null) {
+      // $FlowFixMe: `match` contains an `index` property, as per the standard.
+      return { node: it, offset: match.index + 1 };
+    }
+
+    it = findPreviousTextNode(it);
+  }
+
+  throw new Error('No previous text nodes or content is whitespace');
+}
+
+export function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint {
   let node, offset;
   node = range.endContainer;
   offset = range.endOffset;
 
   if (node.nodeType === Node.TEXT_NODE) {
-    return { node, offset };
+    return skipEndWhitespace(node, offset);
   }
 
   const children = node.childNodes;
@@ -86,7 +133,5 @@ function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint {
     offset = 0;
   }
 
-  return { node, offset };
+  return skipEndWhitespace(node, offset);
 }
-
-export { getNormalizedStartBoundaryPoint, getNormalizedEndBoundaryPoint };
