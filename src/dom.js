@@ -11,7 +11,7 @@ import { Css } from './consts';
 export type Position = {| x: number, y: number |};
 export type ForEachNodeCallback = Node => boolean;
 
-function classNameToSet(el: HTMLElement): Set<string> {
+export function classNameToSet(el: HTMLElement): Set<string> {
   return new Set(
     el.className
       .split(' ')
@@ -20,7 +20,7 @@ function classNameToSet(el: HTMLElement): Set<string> {
   );
 }
 
-function ensureIterable(
+export function ensureIterable(
   elementOrCollection: HTMLElement | NodeList<HTMLElement>
 ): Iterable<HTMLElement> {
   return elementOrCollection instanceof NodeList
@@ -28,7 +28,7 @@ function ensureIterable(
     : new Set([elementOrCollection]);
 }
 
-function addClass(coll: HTMLElement | NodeList<HTMLElement>, name: string): void {
+export function addClass(coll: HTMLElement | NodeList<HTMLElement>, name: string): void {
   for (const el of ensureIterable(coll)) {
     const set = classNameToSet(el);
     set.add(name);
@@ -36,7 +36,7 @@ function addClass(coll: HTMLElement | NodeList<HTMLElement>, name: string): void
   }
 }
 
-function removeClass(coll: HTMLElement | NodeList<HTMLElement>, name: string): void {
+export function removeClass(coll: HTMLElement | NodeList<HTMLElement>, name: string): void {
   for (const el of ensureIterable(coll)) {
     const set = classNameToSet(el);
     set.delete(name);
@@ -44,20 +44,22 @@ function removeClass(coll: HTMLElement | NodeList<HTMLElement>, name: string): v
   }
 }
 
-function getHighlightElements(id: number): NodeList<HTMLElement> {
+export function getHighlightElements(id: number): NodeList<HTMLElement> {
   return document.querySelectorAll(`.${Css.highlight}-id-${id}`);
 }
 
-function getForQuerySet(qid: number): NodeList<HTMLElement> {
+export function getForQuerySet(qid: number): NodeList<HTMLElement> {
   return document.querySelectorAll(`.${Css.highlight}-${qid}`);
 }
 
-function getAllHighlightElements(additionalClass: string | null = null): NodeList<HTMLElement> {
+export function getAllHighlightElements(
+  additionalClass: string | null = null
+): NodeList<HTMLElement> {
   const otherClass = additionalClass ? `.${additionalClass}` : '';
   return document.querySelectorAll(`.${Css.highlight}${otherClass}`);
 }
 
-function isHighlightVisible(id: number): boolean {
+export function isHighlightVisible(id: number): boolean {
   const elements = getHighlightElements(id);
   if (elements.length < 1) {
     return false;
@@ -69,7 +71,7 @@ function isHighlightVisible(id: number): boolean {
   return bbox.height > 0 && bbox.width > 0;
 }
 
-function createHighlightElement(node: HTMLElement | Node, className: string): HTMLElement {
+export function createHighlightElement(node: HTMLElement | Node, className: string): HTMLElement {
   const span = document.createElement('span');
   span.className = className;
   (node.parentNode: any).insertBefore(span, node);
@@ -77,12 +79,12 @@ function createHighlightElement(node: HTMLElement | Node, className: string): HT
   return span;
 }
 
-function insertBefore(newNode: Node, beforeNode: Node): Node {
+export function insertBefore(newNode: Node, beforeNode: Node): Node {
   (beforeNode.parentNode: any).insertBefore(newNode, beforeNode);
   return newNode;
 }
 
-function insertAfter(newNode: Node, afterNode: Node): Node {
+export function insertAfter(newNode: Node, afterNode: Node): Node {
   // Automatically adds to the end of the list when `nextSibling` is `null`
   (afterNode.parentNode: any).insertBefore(newNode, afterNode.nextSibling);
   return newNode;
@@ -90,7 +92,7 @@ function insertAfter(newNode: Node, afterNode: Node): Node {
 
 // Taken with a few alterations from:
 // https://www.kirupa.com/html5/get_element_position_using_javascript.htm
-function getOffset(el: HTMLElement): Position {
+export function getOffset(el: HTMLElement): Position {
   let x = 0;
   let y = 0;
 
@@ -114,14 +116,14 @@ function getOffset(el: HTMLElement): Position {
   return { x, y };
 }
 
-function isInView(el: HTMLElement): boolean {
+export function isInView(el: HTMLElement): boolean {
   const bbox = el.getBoundingClientRect();
   return bbox.top >= 0 && bbox.top + bbox.height < window.innerHeight;
 }
 
 // Note that flow does not expose a formal Window type, which means we are unable to validate the
 // type.
-function scrollIntoView(el: HTMLElement, container: any): void {
+export function scrollIntoView(el: HTMLElement, container: any): void {
   if (container == null) {
     container = window;
   }
@@ -152,7 +154,7 @@ function scrollIntoView(el: HTMLElement, container: any): void {
  *
  * @returns {boolean} Result of last callback call
  */
-function visitDOM(node: Node, callback: ForEachNodeCallback): boolean {
+export function visitDOM(node: Node, callback: ForEachNodeCallback): boolean {
   try {
     if (callback(node) === true) {
       return true;
@@ -180,9 +182,8 @@ function visitDOM(node: Node, callback: ForEachNodeCallback): boolean {
  * @param {HTMLElement} container - container element on whose tree to perform search
  * @returns {Node | null} Last text node found or `null` if none
  */
-function findLastTextNode(container: HTMLElement): Node | null {
+export function findLastTextNode(container: HTMLElement): Node | null {
   let lastTextNode = null;
-
   visitDOM(container, node => {
     if (node.nodeType === Node.TEXT_NODE) {
       lastTextNode = node;
@@ -193,23 +194,3 @@ function findLastTextNode(container: HTMLElement): Node | null {
 
   return lastTextNode;
 }
-
-// Export "private" functions so they too can be tested.
-export { classNameToSet, ensureIterable };
-
-export {
-  addClass,
-  removeClass,
-  getHighlightElements,
-  getForQuerySet,
-  getAllHighlightElements,
-  isHighlightVisible,
-  createHighlightElement,
-  insertBefore,
-  insertAfter,
-  getOffset,
-  isInView,
-  scrollIntoView,
-  visitDOM,
-  findLastTextNode,
-};
