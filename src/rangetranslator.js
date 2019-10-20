@@ -120,30 +120,6 @@ class RangeTranslator {
     return new TextRange(this.content, startDescr, endDescr);
   }
   /* eslint-enable complexity, max-statements */
-
-  /**
-   * Clear the current text selection
-   *
-   * Only the Chrome and Firefox implementations are supported.
-   */
-  clear(): void {
-    // From: http://stackoverflow.com/a/3169849/3001914
-    // Note that we don't support IE at all.
-    const getSelection = window.getSelection;
-    if (getSelection != null) {
-      if (getSelection().empty) {
-        // Chrome
-        getSelection().empty();
-        return;
-      } else if (getSelection().removeAllRanges) {
-        // Firefox
-        getSelection().removeAllRanges();
-        return;
-      }
-    }
-
-    logger.warn('clearing of text selection not supported');
-  }
 }
 
 export default RangeTranslator;
