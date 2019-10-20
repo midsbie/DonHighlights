@@ -9,16 +9,17 @@ import TextContent from './textcontent';
 import TextRange from './textrange';
 
 /**
- * Support for browser text selections
+ * Support for translation of arbitrary ranges
  *
- * This class is an extension of HTML Highlighter which provides support for browser text
- * selections.
+ * This class is an extension of HTML Highlighter which provides support for translation of
+ * arbitrary browser `Range` instances to internal `TextRange` ones, which can be used to compute
+ * XPath descriptors or create highlights.
  */
-class SelectedRange {
+class RangeTranslator {
   content: TextContent;
 
-  static fromHtmlHighlighter(instance: HtmlHighlighter): SelectedRange {
-    return new SelectedRange(instance.content);
+  static fromHtmlHighlighter(instance: HtmlHighlighter): RangeTranslator {
+    return new RangeTranslator(instance.content);
   }
 
   constructor(content: TextContent) {
@@ -31,18 +32,24 @@ class SelectedRange {
    *
    * If there is no selected text, `null` is returned.
    *
+   * @param {Range} [range] - Optional range to translate.  If omitted, the range associated with
+   * the current browser selection is used instead.
+   *
    * @returns {TextRange|null} The current selected text range or `null` if it could not be
    * computed.
    */
-  get(): TextRange | null {
-    const sel = window.getSelection();
-    if (sel == null) {
-      return null;
-    }
-
-    const range = sel.getRangeAt(0);
+  translate(range?: Range): TextRange | null {
+    // Default to current browser selection if range omitted.
     if (range == null) {
-      return null;
+      const sel = window.getSelection();
+      if (sel == null) {
+        return null;
+      }
+
+      range = sel.getRangeAt(0);
+      if (range == null) {
+        return null;
+      }
     }
 
     let start, end;
@@ -60,15 +67,15 @@ class SelectedRange {
     }
 
     // Account for selections where the start and end elements are the same *and* whitespace exists
-    // longer than one character.  For instance, The element `<p>a   b</p>` is shown as `a b` by
-    // browsers with the whitespace rendered collapsed.  This means that in this particular
-    // case, it is not possible to simply retrieve the length of the selection's text and use that
-    // as the selection's end offset as it would be invalid.  The way to avoid calculating an
-    // invalid end offset is by looking at the anchor and focus (start and end) offsets.
-    // Strangely, if the selection spans more than one element, one may simply use the length of
-    // the selected text regardless of the occurrence of whitespace in between.
+    // longer than one character to account for the fact that browsers collapse whitespace.  For
+    // instance, the element `<p>a b</p>` would be rendered as `a b`.  This means that in this
+    // particular case, it is not possible to simply retrieve the length of the selection's text
+    // and use that as the selection's end offset as it would be invalid.  The way to avoid
+    // calculating an invalid end offset is by looking at the anchor and focus (start and end)
+    // offsets.  Strangely, if the selection spans more than one element, one may simply use the
+    // length of the selected text regardless of the occurrence of whitespace in between.
     const len =
-      start.node === end.node ? Math.abs(end.offset - start.offset) : sel.toString().length;
+      start.node === end.node ? Math.abs(end.offset - start.offset) : range.toString().length;
     if (len <= 0) {
       return null;
     }
@@ -79,9 +86,9 @@ class SelectedRange {
     if (startOffset < 0 || endOffset < 0) {
       logger.error(
         'unable to retrieve offset of selection anchor or focus node(s):',
-        sel.anchorNode,
+        range.startContainer,
         start.node,
-        sel.focusNode,
+        range.endContainer,
         end.node
       );
       return null;
@@ -139,4 +146,4 @@ class SelectedRange {
   }
 }
 
-export default SelectedRange;
+export default RangeTranslator;

@@ -5,7 +5,7 @@ import {
   HtmlHighlighter,
   XPathFinder,
   RangeHighlighter,
-  SelectedRange,
+  RangeTranslator,
   setVerbose,
   setDebugging,
 } from '../../src/main.js';
@@ -98,8 +98,8 @@ function init() {
           return;
         }
 
-        const selectedRange = SelectedRange.fromHtmlHighlighter(highlighter);
-        const range = selectedRange.get();
+        const translator = RangeTranslator.fromHtmlHighlighter(highlighter);
+        const range = translator.translate();
         if (range === null) {
           $widgetSelection.removeClass('enabled');
           return;
@@ -139,7 +139,7 @@ function init() {
           highlighter.add('custom', [{ start: xpath.start, end: xpath.end }], true, 100);
         }
 
-        selectedRange.clear();
+        getSelection().removeAllRanges();
         $widgetSelection.addClass('enabled');
       }, 150);
     },

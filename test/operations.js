@@ -1,6 +1,8 @@
 /* eslint-disable no-use-before-define */
 import chai from 'chai';
 
+import RangeTranslator from '../src/rangetranslator';
+
 import * as instance from './instance';
 import * as attest from './attest';
 import { tests } from './tests';
@@ -42,7 +44,7 @@ function select(sn, so, en, eo) {
   sel.removeAllRanges();
   sel.addRange(range);
 
-  result = highlighter.getSelectedRange();
+  result = RangeTranslator.fromHighlighter(highlighter).translate();
   container.style.display = 'none';
 
   return result;

@@ -18,7 +18,7 @@ export {
   RangeHighlighter,
   TextFinder,
   XPathFinder,
-  SelectedRange,
+  RangeTranslator,
   setVerbose,
   getVerbose,
   setDebugging,
