@@ -128,6 +128,13 @@ export function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint 
     } else {
       offset = node.textContent.length;
     }
+  } else if (offset === 0) {
+    // No text in the end container is selected so find previous text node and select its contents.
+    node = findPreviousTextNode(node);
+    if (node == null) {
+      throw new Error('[InvalidNodeTypeError] Invalid end container');
+    }
+    offset = node.textContent.length;
   } else {
     node = node.childNodes[offset];
     offset = 0;
