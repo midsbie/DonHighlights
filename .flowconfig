@@ -2,6 +2,7 @@
 .*/node_modules/.*
 # Ignoring test source files due to numerous errors.
 .*/*.test.js
+.*/test/.*
 
 [include]
 flow-typed
