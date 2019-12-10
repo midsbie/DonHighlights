@@ -3,15 +3,15 @@
 import merge from 'merge';
 
 import type { TextSubject } from './typedefs';
-import TextContent from './textcontent';
-import Finder from './finder';
-import TextRange from './textrange';
+import TextContent from './TextContent';
+import Finder from './Finder';
+import TextRange from './TextRange';
 
 /* FIXME: create a class for matching of regular expression subjects. */
 /**
  * Class responsible for finding text in a `TextContent` instance
  */
-class TextFinder extends Finder {
+export default class TextFinder extends Finder {
   /**
    * Determine if given subject is of type accepted by the `TextFinder` class
    *
@@ -77,5 +77,3 @@ class TextFinder extends Finder {
     return range;
   }
 }
-
-export default TextFinder;

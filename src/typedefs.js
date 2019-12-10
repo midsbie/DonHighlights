@@ -45,10 +45,10 @@ export type QuerySet = {|
 
 export type TextSubject = string | RegExp;
 
-export type XpathSubject = {|
+export type XPathSubject = {|
   state: any,
   start: { xpath: string, offset: number },
   end: { xpath: string, offset: number },
 |};
 
-export type QuerySubject = TextSubject | XpathSubject;
+export type QuerySubject = TextSubject | XPathSubject;

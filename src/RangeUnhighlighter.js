@@ -5,7 +5,7 @@ import * as dom from './dom';
 /**
  * Convenience class for removing highlighting
  */
-class RangeUnhighlighter {
+export default class RangeUnhighlighter {
   /**
    * Remove highlighting given by its id
    *
@@ -23,5 +23,3 @@ class RangeUnhighlighter {
     }
   }
 }
-
-export default RangeUnhighlighter;

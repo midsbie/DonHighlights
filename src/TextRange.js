@@ -1,14 +1,14 @@
 // @flow
 
 import * as dom from './dom';
-import TextContent from './textcontent';
-import TextNodeVisitor from './textnodevisitor';
-import TextNodeXpath from './textnodexpath';
-import type { Marker } from './textcontent';
+import TextContent from './TextContent';
+import TextNodeVisitor from './TextNodeVisitor';
+import TextNodeXPath from './TextNodeXPath';
+import type { Marker } from './TextContent';
 
 export type RangeDescriptor = {| marker: Marker, offset: number |};
 
-export type RangeXpathDescriptor = {|
+export type RangeXPathDescriptor = {|
   start: { xpath: string, offset: number },
   end: { xpath: string, offset: number },
 |};
@@ -20,7 +20,7 @@ export type RangeXpathDescriptor = {|
  * @param {Object} start - descriptor of start of range
  * @param {Object} end - descriptor of end of range
  */
-class TextRange {
+export default class TextRange {
   content: TextContent;
   start: RangeDescriptor;
   end: RangeDescriptor;
@@ -99,12 +99,12 @@ class TextRange {
   /**
    * Compute the XPath representation of the active range
    *
-   * @returns {RangeXpathDescriptor} XPath representation of active range
+   * @returns {RangeXPathDescriptor} XPath representation of active range
    */
-  computeXpath(): RangeXpathDescriptor {
+  computeXPath(): RangeXPathDescriptor {
     const start = this.start.marker.node;
     const end = this.end.marker.node;
-    const computor = new TextNodeXpath(this.content.root);
+    const computor = new TextNodeXPath(this.content.root);
     return {
       start: {
         xpath: computor.xpathOf(start),
@@ -176,5 +176,3 @@ class TextRange {
     dom.createHighlightElement(node, className);
   }
 }
-
-export default TextRange;

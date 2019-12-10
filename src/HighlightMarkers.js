@@ -1,8 +1,8 @@
 // @flow
 
-import TextRange from './textrange';
-import * as dom from './dom';
 import type { QuerySet } from './typedefs';
+import * as dom from './dom';
+import TextRange from './TextRange';
 
 export type Marker = {|
   query: QuerySet,

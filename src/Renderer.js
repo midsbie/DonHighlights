@@ -2,14 +2,14 @@
 
 import EventEmitter from 'events';
 
-import logger from './logger';
 import type { Options, QuerySet } from './typedefs';
 import { Css } from './consts';
-import * as factory from './factory';
-import RangeHighlighter from './rangehighlighter';
-import RangeUnhighlighter from './rangeunhighlighter';
-import TextContent from './textcontent';
 import * as util from './util';
+import logger from './logger';
+import * as factory from './factory';
+import RangeHighlighter from './RangeHighlighter';
+import RangeUnhighlighter from './RangeUnhighlighter';
+import TextContent from './TextContent';
 
 /**
  * Query set renderer abstract base class

@@ -1,26 +1,26 @@
 // @flow
 
-import type { XpathSubject } from './typedefs';
-import TextContent from './textcontent';
-import Finder from './finder';
-import TextNodeXpath from './textnodexpath';
-import TextRange from './textrange';
+import type { XPathSubject } from './typedefs';
 import logger from './logger';
+import TextContent from './TextContent';
+import Finder from './Finder';
+import TextNodeXPath from './TextNodeXPath';
+import TextRange from './TextRange';
 
 /**
  * Class responsible for locating text in a `TextContent` instance from an
  * XPath representation and start and end offsets.
  */
-class XpathFinder extends Finder {
+export default class XPathFinder extends Finder {
   /**
    * Class constructor
    *
    * @param {TextContent} content - Reference to `TextContent` instance
-   * @param {XpathSubject} subject - Descriptor containing an XPath representation and
+   * @param {XPathSubject} subject - Descriptor containing an XPath representation and
    * start and end offsets.
    */
   // FIXME: what type is `subject`?
-  constructor(content: TextContent, subject: XpathSubject) {
+  constructor(content: TextContent, subject: XPathSubject) {
     // Construct base class
     super(content);
 
@@ -30,7 +30,7 @@ class XpathFinder extends Finder {
 
     // Compute text node start and end elements that the XPath representation refers to.
     let end;
-    let xpath = new TextNodeXpath(this.content.root);
+    let xpath = new TextNodeXPath(this.content.root);
     let start = xpath.elementAt(subject.start.xpath);
 
     // If an element could not be obtained from the XPath representation, abort now (messages will
@@ -96,5 +96,3 @@ class XpathFinder extends Finder {
     return new TextRange(this.content, this.getAt_(subject.start), this.getAt_(subject.end));
   }
 }
-
-export default XpathFinder;

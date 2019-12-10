@@ -2,11 +2,11 @@
 
 import EventEmitter from 'events';
 
-import * as dom from './dom';
+import type { ScrollToCallback } from './typedefs';
 import { Css } from './consts';
 import logger from './logger';
-import HighlightMarkers from './highlightmarkers';
-import type { ScrollToCallback } from './typedefs';
+import * as dom from './dom';
+import HighlightMarkers from './HighlightMarkers';
 
 export type IterableQueries = string | Array<string>;
 

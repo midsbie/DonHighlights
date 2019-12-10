@@ -1,7 +1,7 @@
 // @flow
 
 import { Css } from './consts';
-import TextRange from './textrange';
+import TextRange from './TextRange';
 
 /**
  * Convenience class for applying highlights on arbitrary `TextRange` instances
@@ -18,7 +18,7 @@ import TextRange from './textrange';
  * Finally, the highlight ID is returned but also incremented so the next generated highlight is
  * guaranteed to be unique.
  */
-class RangeHighlighter {
+export default class RangeHighlighter {
   id: number;
   classes: string;
 
@@ -58,5 +58,3 @@ class RangeHighlighter {
     return this.id++;
   }
 }
-
-export default RangeHighlighter;

@@ -4,16 +4,16 @@ import EventEmitter from 'events';
 
 import merge from 'merge';
 
-import globals from './globals';
-import logger from './logger';
 import type { ClientOptions, Options, Stats, QuerySet, QuerySubject } from './typedefs';
 import { Css } from './consts';
+import globals from './globals';
+import logger from './logger';
 import * as dom from './dom';
-import TextContent from './textcontent';
-import HighlightMarkers from './highlightmarkers';
-import Renderer, { QueryHighlighter, QueryUnhighlighter } from './renderer';
-import Cursor from './cursor';
 import { createPromiseCapabilities } from './util';
+import TextContent from './TextContent';
+import HighlightMarkers from './HighlightMarkers';
+import Renderer, { QueryHighlighter, QueryUnhighlighter } from './Renderer';
+import Cursor from './Cursor';
 
 /**
  * Main class of the HTML Highlighter module, which exposes an API enabling
@@ -30,7 +30,7 @@ import { createPromiseCapabilities } from './util';
  *  - disable: query set disabled
  *  - clear: all query sets removed and cursor cleared
  */
-class HtmlHighlighter extends EventEmitter {
+export default class HTMLHighlighter extends EventEmitter {
   options: Options;
   renderer: Renderer;
   cursor: Cursor;
@@ -61,7 +61,7 @@ class HtmlHighlighter extends EventEmitter {
     super();
 
     // Merge default options
-    this.options = merge({}, HtmlHighlighter.defaults, options);
+    this.options = merge({}, HTMLHighlighter.defaults, options);
 
     this.queries = new Map();
     this.markers = new HighlightMarkers();
@@ -556,5 +556,3 @@ class HtmlHighlighter extends EventEmitter {
     }
   }
 }
-
-export default HtmlHighlighter;

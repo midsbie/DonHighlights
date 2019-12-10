@@ -58,7 +58,7 @@ function describeAllTests(name, options, preInit) {
     describeGeneralTests();
     describeCursorMovementTests();
     describeTextSelectionTests();
-    describeXpathTests();
+    describeXPathTests();
     describeSpecialCharacterHandlingTests();
 
     try {
@@ -639,7 +639,7 @@ function describeTextSelectionTests() {
   });
 }
 
-function describeXpathTests() {
+function describeXPathTests() {
   describe('XPath', function() {
     describe('Basic', function() {
       beforeEach('initialise state', function() {

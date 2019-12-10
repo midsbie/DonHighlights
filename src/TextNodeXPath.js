@@ -12,7 +12,7 @@ export type XPathPart = {| tag: string, index: number |};
  *
  * @param {DOMElement} [root=null] - Root DOM node
  */
-class TextNodeXpath {
+export default class TextNodeXPath {
   root: Node;
 
   constructor(root: Node) {
@@ -466,5 +466,3 @@ allowed.  Offending XPath representation: ${xpath}`
     return null;
   }
 }
-
-export default TextNodeXpath;

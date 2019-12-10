@@ -11,7 +11,7 @@ export type MarkerArray = Array<Marker>;
  * Class responsible for building and keeping a convenient representation
  * of the text present in an HTML DOM sub-tree.
  */
-class TextContent {
+export default class TextContent {
   root: HTMLElement;
   text: string;
   // FIXME: add type
@@ -263,5 +263,3 @@ class TextContent {
     }
   }
 }
-
-export default TextContent;

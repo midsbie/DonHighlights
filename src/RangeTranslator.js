@@ -4,9 +4,9 @@ import merge from 'merge';
 
 import logger from './logger';
 import * as selection from './selection';
-import HtmlHighlighter from './htmlhighlighter';
-import TextContent from './textcontent';
-import TextRange from './textrange';
+import HtmlHighlighter from './HTMLHighlighter';
+import TextContent from './TextContent';
+import TextRange from './TextRange';
 
 /**
  * Support for translation of arbitrary ranges
@@ -15,7 +15,7 @@ import TextRange from './textrange';
  * arbitrary browser `Range` instances to internal `TextRange` ones, which can be used to compute
  * XPath descriptors or create highlights.
  */
-class RangeTranslator {
+export default class RangeTranslator {
   content: TextContent;
 
   static fromHtmlHighlighter(instance: HtmlHighlighter): RangeTranslator {
@@ -121,5 +121,3 @@ class RangeTranslator {
   }
   /* eslint-enable complexity, max-statements */
 }
-
-export default RangeTranslator;

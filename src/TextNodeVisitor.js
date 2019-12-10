@@ -4,7 +4,7 @@
  * Convenient class for visiting all text nodes that are siblings and descendants of a given root
  * node
  */
-class TextNodeVisitor {
+export default class TextNodeVisitor {
   root: Node;
   current: ?Node;
 
@@ -91,5 +91,3 @@ class TextNodeVisitor {
     return next != null ? this.nextText_(next) : null;
   }
 }
-
-export default TextNodeVisitor;

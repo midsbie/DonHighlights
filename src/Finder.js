@@ -1,11 +1,9 @@
 // @flow
 
-import TextContent from './textcontent';
-/* eslint-disable camelcase */
 import * as util from './util';
-/* eslint-enable camelcase */
-import TextRange from './textrange';
-import type { RangeDescriptor } from './textrange';
+import TextContent from './TextContent';
+import TextRange from './TextRange';
+import type { RangeDescriptor } from './TextRange';
 
 /**
  * Abstract base class of all finder classes
@@ -15,7 +13,7 @@ import type { RangeDescriptor } from './textrange';
  * document.
  * @param {*} subject - subject to find; can be of any type
  */
-class Finder {
+export default class Finder {
   content: TextContent;
   results: Array<any>;
   current: number;
@@ -58,5 +56,3 @@ class Finder {
     return TextRange.descriptorAbs(this.content.at(index), offset);
   }
 }
-
-export default Finder;
