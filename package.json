@@ -5,6 +5,7 @@
   "version": "0.4.3",
   "main": "dist/htmlhighlighter.js",
   "module": "src/main.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dossier/html-highlighter.git"
@@ -19,35 +20,30 @@
     "url": "https://github.com/dossier/html-highlighter.git/issues"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --progress --color --display-error-details",
-    "start": "webpack-dev-server --progress --color --hot --inline --host 0.0.0.0 --port $([ -z \"$NODE_PORT\" ] && echo 8080 || echo $NODE_PORT)",
+    "clean": "rimraf lib dist es coverage types",
+    "build": "rollup -c",
+    "watch": "rollup -c --watch",
     "upgrade": "yarn upgrade-interactive --latest",
     "check": "yarn run check:flow && yarn run check:lint && yarn run check:fmt && echo 'check: PASS'",
     "check:flow": "flow",
-    "check:lint": "yarn run check:lint:src && yarn run check:lint:cfg",
-    "check:lint:nocache": "eslint --format $(sh/get-eslint-formatter) --color --max-warnings=0 ./packages/*/*/src",
-    "check:lint:cfg": "eslint --format $(sh/get-eslint-formatter) --color --cache --max-warnings=0 ./config/",
-    "check:lint:src": "eslint --format $(sh/get-eslint-formatter) --color --cache --max-warnings=0 ./packages/*/*/src",
+    "check:lint": "yarn run check:lint:src",
+    "check:lint:nocache": "eslint --format $(sh/get-eslint-formatter) --color --max-warnings=0 ./src",
+    "check:lint:src": "eslint --format $(sh/get-eslint-formatter) --color --cache --max-warnings=0 ./src",
     "check:fmt": "yarn run check:fmt:js && yarn run check:fmt:json && yarn run check:fmt:md && yarn run check:fmt:css",
-    "check:fmt:js": "prettier './packages/**/{e2e,src}/**/*.{js,jsx}' --check",
-    "check:fmt:config": "prettier './packages/**/tasks/**/*.js' --check",
+    "check:fmt:js": "prettier './src/**/.js' --check",
     "check:fmt:json": "prettier --parser json '**/package.json' --check",
     "check:fmt:md": "prettier --parser markdown '**/*.md' --check",
-    "check:fmt:css": "prettier --parser css '**/*.css' --check",
-    "check:fmt:scss": "prettier --parser scss '**/*.scss' --check",
-    "fix:fmt": "yarn run fix:fmt:js; yarn run fix:fmt:config; yarn run fix:fmt:json; yarn run fix:fmt:md; yarn run fix:fmt:css",
+    "fix:fmt": "yarn run fix:fmt:js; yarn run fix:fmt:json; yarn run fix:fmt:md",
     "fix:fmt:js": "yarn run check:fmt:js --write",
-    "fix:fmt:config": "yarn run check:fmt:config --write",
     "fix:fmt:json": "yarn run check:fmt:json --write",
-    "fix:fmt:md": "yarn run check:fmt:md --write",
-    "fix:fmt:css": "yarn run check:fmt:css --write",
-    "fix:fmt:scss": "yarn run check:fmt:scss --write"
+    "fix:fmt:md": "yarn run check:fmt:md --write"
   },
   "files": [
     "src/*",
     "dist/*"
   ],
   "dependencies": {
+    "@babel/runtime": "^7.7.6",
     "merge": "^1.2.1"
   },
   "devDependencies": {
@@ -77,12 +73,13 @@
     "jsdom": "^15.2.1",
     "jsdom-global": "^3.0.2",
     "prettier": "^1.19.1",
-    "terser-webpack-plugin": "^2.2.2",
-    "webpack": "^4.41.2",
-    "webpack-bundle-analyzer": "^3.6.0",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0",
-    "webpack-node-externals": "^1.7.2",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.27.9",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^5.1.2",
     "yarn": "^1.21.0"
   }
 }
