@@ -3,7 +3,7 @@
 
 import merge from 'merge';
 
-import { createHighlighter, DOMHighlighter } from '../../src/main';
+import { createHighlighter, DOMHighlighter } from '../../src';
 
 import { documents } from './tests';
 

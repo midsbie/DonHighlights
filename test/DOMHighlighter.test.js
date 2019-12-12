@@ -1,6 +1,6 @@
 // @flow
 
-import { DOMHighlighter } from '../src/main';
+import { DOMHighlighter } from '../src';
 import Group from '../src/Group';
 
 import { instance } from './helpers';

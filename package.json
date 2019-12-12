@@ -18,12 +18,13 @@
     "url": "https://github.com/miguel-guedes/dom-highlighter.git/issues"
   },
   "scripts": {
-    "clean": "rimraf lib dist es coverage types",
-    "build": "rollup -c",
-    "watch": "rollup -c --watch",
     "upgrade": "yarn upgrade-interactive --latest",
     "check": "yarn run check:flow && yarn run check:lint && yarn run check:fmt && echo 'check: PASS'",
+    "clean": "rimraf lib dist es coverage types",
     "test": "jest",
+    "build": "rollup -c",
+    "watch": "rollup -c --watch",
+    "prepare": "yarn run check && yarn run clean && yarn run test && yarn run build",
     "check:flow": "flow",
     "check:lint": "yarn run check:lint:src",
     "check:lint:nocache": "eslint --format $(sh/get-eslint-formatter) --color --max-warnings=0 ./src",

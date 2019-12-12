@@ -18,7 +18,7 @@ const makeExternalPredicate = externalArr => {
   return id => pattern.test(id);
 };
 
-const input = 'src/main.js';
+const input = 'src/index.js';
 
 export default [
   // CommonJS
