@@ -1,0 +1,6 @@
+#/bin/sh
+if [ -n "$CI" ]; then
+  echo "./node_modules/eslint-junit/index.js"
+else
+  echo "stylish"
+fi

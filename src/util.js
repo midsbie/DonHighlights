@@ -1,24 +1,20 @@
 // @flow
 
-export type PromiseCapabilities = {| instance: Promise<*>, resolve: any => any, fail: any => any |};
+import Group from './Group';
 
-function abstract() {
+export function abstract() {
   throw new Error('Abstract method not implemented');
 }
 
-function createPromiseCapabilities(): PromiseCapabilities {
-  let resolve, fail;
-  const instance = new Promise((pr, pf) => {
-    resolve = pr;
-    fail = pf;
-  });
+export function groupNamesToGroupSet(names: Array<string>, all: Map<string, Group>): Set<Group> {
+  return names.reduce((map, name) => {
+    const g = all.get(name);
+    if (g == null) {
+      console.error('invalid group name or not found:', name);
+    } else {
+      map.add(g);
+    }
 
-  // $FlowFixMe: `resolve` and `fail` are defined at this point
-  return {
-    instance,
-    resolve,
-    fail,
-  };
+    return map;
+  }, new Set());
 }
-
-export { abstract, createPromiseCapabilities };
