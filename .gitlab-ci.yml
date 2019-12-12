@@ -1,4 +1,26 @@
 # Gitlab CI configuration file
+#
+# Here's an excerpt taken from the old Circle CI configuration file responsible for publishing the
+# package:
+#
+#       - run:
+#           name: Authenticate to NPM
+#           command: |
+#             # See: http://blog.npmjs.org/post/118393368555/deploying-with-npm-private-modules
+#             echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#             # Verify that the authentication works
+#             npm whoami
+#
+#       - deploy:
+#           name: Publish to NPM on tag
+#           command: |
+#             # If we aren't on a tagged release, this deploymnt does not run.
+#             if [ -z "$CIRCLE_TAG" ]; then
+#               exit 0
+#             fi
+#
+#             npm publish
+# --
 
 # Reference: https://hub.docker.com/_/node/
 image: node:12.13.0
@@ -8,6 +30,7 @@ image: node:12.13.0
 # http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
 services:
   # No services are currently declared
+
 
 # Cache is disabled because items are stored on a per-runner basis and thus not shared.  This means
 # that it is not possible to share the output of a "bootstrap" job that installs node modules among
