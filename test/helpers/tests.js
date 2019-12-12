@@ -7,11 +7,11 @@ const dataFiles = [
   'one_paragraph-ampersand_escaped',
   'viber_attacked_by_syrian_electronic_army',
 ];
-const data = dataFiles.map(d => require(`../etc/data/${d}.json`).html);
+export const documents = dataFiles.map(d => require(`../data/${d}.json`).html);
 /* eslint-enable global-require */
 
 // Constants
-const counts = {
+export const counts = {
   the: 46,
   viber: 22,
   a: 285,
@@ -19,7 +19,7 @@ const counts = {
 };
 
 // Tests available
-const tests = {
+export const tests = {
   standard: {
     text:
       'Viber has now clarified that the hack only allowed access to two' +
@@ -153,5 +153,3 @@ const tests = {
     ],
   },
 };
-
-export { data, counts, tests };

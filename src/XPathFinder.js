@@ -1,7 +1,6 @@
 // @flow
 
-import type { XPathSubject } from './typedefs';
-import logger from './logger';
+import type { HighlightXPathQuery } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
 import TextNodeXPath from './TextNodeXPath';
@@ -16,11 +15,11 @@ export default class XPathFinder extends Finder {
    * Class constructor
    *
    * @param {TextContent} content - Reference to `TextContent` instance
-   * @param {XPathSubject} subject - Descriptor containing an XPath representation and
+   * @param {HighlightXPathQuery} subject - Descriptor containing an XPath representation and
    * start and end offsets.
    */
   // FIXME: what type is `subject`?
-  constructor(content: TextContent, subject: XPathSubject) {
+  constructor(content: TextContent, subject: HighlightXPathQuery) {
     // Construct base class
     super(content);
 
@@ -48,7 +47,7 @@ export default class XPathFinder extends Finder {
     start = content.find(start);
     end = content.find(end);
     if (start < 0 || end < 0) {
-      logger.error(
+      console.error(
         'unable to derive global offsets: %d:%d [xpath=%s:%s to end=%s:%s]',
         start,
         end,
@@ -64,7 +63,7 @@ export default class XPathFinder extends Finder {
     start = content.at(start).offset + subject.start.offset;
     end = content.at(end).offset + subject.end.offset - 1;
 
-    /* logger.log("DEBUG start = ", start, "end = ", end, subject); */
+    /* console.log("DEBUG start = ", start, "end = ", end, subject); */
 
     if (start > end) {
       throw new Error('Invalid XPath representation: start > end');

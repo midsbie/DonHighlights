@@ -8,6 +8,7 @@ lib
 *.tgz
 .eslintcache
 yarn-error.log
+junit.xml
 
 *~
 \#*

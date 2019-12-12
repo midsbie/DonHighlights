@@ -1,8 +1,6 @@
 // @flow
 
-import globals from './globals';
 import * as dom from './dom';
-import logger from './logger';
 
 export type Marker = {| node: Node, offset: number |};
 export type MarkerArray = Array<Marker>;
@@ -25,11 +23,20 @@ export default class TextContent {
     this.root = root;
     this.text = '';
     this.markers = [];
-    this.refresh();
+  }
+
+  dispose(): void {
+    this.text = '';
+    this.markers = [];
+  }
+
+  setRoot(root: HTMLElement): void {
+    this.root = root;
+    this.parse();
   }
 
   /**
-   * Refresh internal representation of the text
+   * Parse DOM tree and produce internal representation of the text
    *
    * The internal representation of the text present in the DOM sub-tree of the `root` consists of
    * an array of global offsets for every text node in the document, and a reference to the
@@ -46,13 +53,13 @@ export default class TextContent {
    *
    * Should only be invoked when the HTML structure mutates, e.g. a new document is loaded.
    * */
-  refresh(): void {
+  parse(): void {
     this.text = '';
     let markers = (this.markers = []);
     const offset = this.visit_(this.root, 0);
 
     // Sanity check
-    if (globals.debugging) {
+    if (process.env.NODE_ENV === 'development') {
       if (this.markers.length !== 0) {
         const marker = markers[markers.length - 1];
         if (offset - marker.node.nodeValue.length !== marker.offset) {
@@ -90,8 +97,11 @@ export default class TextContent {
     let old = marker.node; // The old text node
 
     // Sanity checks
-    if (start < 0 || end < 0 || end >= text.length) {
+    if (start < 0 || end < 0 || start > end) {
       throw new Error('Invalid truncation parameters');
+    } else if (end >= text.length) {
+      console.error(index, start, end, text, old, marker);
+      throw new Error('End offset overflow');
     }
 
     // Chars 0..start - 1
@@ -132,7 +142,7 @@ export default class TextContent {
       });
     }
 
-    if (globals.debugging) {
+    if (process.env.NODE_ENV === 'development') {
       this.assert();
     }
 
@@ -255,7 +265,7 @@ export default class TextContent {
       const marker = this.markers[i];
 
       if (marker.offset !== offset) {
-        logger.error('invalid offset: %d@ %d:%d ->', i, marker.offset, offset, marker);
+        console.error('invalid offset: %d@ %d:%d ->', i, marker.offset, offset, marker);
         throw new Error('Halting due to invalid offset');
       }
 

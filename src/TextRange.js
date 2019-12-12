@@ -61,42 +61,6 @@ export default class TextRange {
   }
 
   /**
-   * Highlight a range
-   *
-   * Highlights a given range by wrapping one or more text nodes with a `span` tag and applying a
-   * particular CSS class.
-   *
-   * @param {string} className - The CSS class name to apply
-   */
-  surround(className: string): void {
-    // Optimised case: highlighting does not span multiple nodes
-    if (this.start.marker.node === this.end.marker.node) {
-      this.surround_(this.start, this.start.offset, this.end.offset, className);
-      this.start.offset = 0;
-      return;
-    }
-
-    // Highlighting spans 2 or more nodes, which means we need to build a representation of all the
-    // text nodes contained in the start to end range, but excluding the start and end nodes
-    const visitor = new TextNodeVisitor(this.start.marker.node, this.content.root);
-    const end = this.end.marker.node;
-    const coll = [];
-
-    // TODO: we assume `visitor.next()' will never return null because `end´ is within bounds
-    while (visitor.next() !== end) {
-      coll.push((visitor.current: any));
-    }
-
-    // Apply highlighting to start and end nodes, and to any nodes in between, if applicable.
-    // Highlighting for the start and end nodes may require text node truncation but not for the
-    // nodes in between.
-    this.surround_(this.start, this.start.offset, null, className);
-    coll.forEach(n => this.surroundWhole_(n, className));
-    this.surround_(this.end, 0, this.end.offset, className);
-    this.start.offset = 0;
-  }
-
-  /**
    * Compute the XPath representation of the active range
    *
    * @returns {RangeXPathDescriptor} XPath representation of active range
@@ -115,6 +79,14 @@ export default class TextRange {
         offset: this.end.offset + computor.offset(end) + 1,
       },
     };
+  }
+
+  clearStartOffset(): void {
+    this.start.offset = 0;
+  }
+
+  getAbsoluteStartOffset(): number {
+    return this.start.marker.offset + this.start.offset;
   }
 
   /**
@@ -139,40 +111,5 @@ export default class TextRange {
     }
 
     return length;
-  }
-
-  // Private interface
-  // -----------------
-  /**
-   * Truncate text node and apply highlighting
-   *
-   * Truncates text node into 2 or 3 text nodes and apply highlighting to relevant node, which is
-   * always the node referenced by `descr.marker.node`.
-   *
-   * @param {Object} descr - Start or end `Range` descriptor
-   * @param {number} start - Start offset
-   * @param {number | null} end - End offset
-   * @param {string} className - CSS class name to apply
-   */
-  surround_(descr: RangeDescriptor, start: number, end: number | null, className: string): void {
-    this.content.truncate(
-      descr.marker,
-      start,
-      end == null ? descr.marker.node.nodeValue.length - 1 : end
-    );
-
-    dom.createHighlightElement(descr.marker.node, className);
-  }
-
-  /**
-   * Apply highlighting fully to a text node
-   *
-   * No text node truncation occurs.
-   *
-   * @param {Node} node - Text node to apply highlighting to
-   * @param {string} className - CSS class name to apply
-   * */
-  surroundWhole_(node: Node, className: string): void {
-    dom.createHighlightElement(node, className);
   }
 }

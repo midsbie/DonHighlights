@@ -1,15 +1,12 @@
-/* eslint-disable no-use-before-define */
-import chai from 'chai';
+// @flow
 
-import RangeTranslator from '../src/rangetranslator';
+import RangeTranslator from '../../src/RangeTranslator';
 
 import * as instance from './instance';
 import * as attest from './attest';
 import { tests } from './tests';
 
-const { assert, expect } = chai;
-
-function dedup(arr) {
+export function dedup(arr) {
   const seen = {};
   const result = [];
 
@@ -25,7 +22,7 @@ function dedup(arr) {
   return result;
 }
 
-function select(sn, so, en, eo) {
+export function select(sn, so, en, eo) {
   let result;
   const range = document.createRange();
   const sel = window.getSelection();
@@ -50,7 +47,7 @@ function select(sn, so, en, eo) {
   return result;
 }
 
-function firstTextOf(node) {
+export function firstTextOf(node) {
   if (node.nodeType === 3) {
     return node;
   }
@@ -65,7 +62,7 @@ function firstTextOf(node) {
   return null;
 }
 
-function lastTextOf(node) {
+export function lastTextOf(node) {
   if (node.nodeType === 3) {
     return node;
   }
@@ -80,7 +77,7 @@ function lastTextOf(node) {
   return null;
 }
 
-function lengthOf(node) {
+export function lengthOf(node) {
   if (node.nodeType === 3) {
     return node.nodeValue.length;
   }
@@ -93,7 +90,7 @@ function lengthOf(node) {
   return length;
 }
 
-function textOf(node) {
+export function textOf(node) {
   if (node.nodeType === 3) {
     return node.nodeValue;
   }
@@ -106,15 +103,15 @@ function textOf(node) {
   return text;
 }
 
-function selectStandard() {
+export function selectStandard() {
   const p = instance.querySelectorAll('p')[2];
   const ft = firstTextOf(p);
   const lt = lastTextOf(p);
   let result;
 
-  assert.isAbove(p.childNodes.length, 1, 'length of second paragraph');
-  assert.isNotNull(ft, 'has first text node');
-  assert.isNotNull(lt, 'has last text node');
+  expect(p.childNodes.length).toBeGreaterThan(1);
+  expect(ft).not.toBeNull();
+  expect(lt).not.toBeNull();
 
   try {
     result = select(ft, 0, lt, lt.nodeValue.length);
@@ -123,16 +120,16 @@ function selectStandard() {
     return null;
   }
 
-  const prefix = instance.isFull() ? '/html[1]/body[1]' : '';
+  const prefix = '/html[1]/body[1]';
   attest.selectionRange(result);
-  expect(result.computeXpath()).to.deep.equal({
+  expect(result.computeXpath()).toEqual({
     end: { offset: 260, xpath: `${prefix}/p[3]/text()[1]` },
     start: { offset: 0, xpath: `${prefix}/p[3]/a[1]/text()[1]` },
   });
   return result;
 }
 
-function highlight(name, qsetname) {
+export function highlight(name, qsetname) {
   if (qsetname === undefined) {
     qsetname = name;
   }
@@ -145,8 +142,6 @@ function highlight(name, qsetname) {
   });
 }
 
-function getHighlightID(cl) {
+export function getHighlightID(cl) {
   return cl.className.match(/hh-highlight-id-(\d+)/)[1];
 }
-
-export { dedup, select, firstTextOf, lastTextOf, lengthOf, textOf, selectStandard, highlight };

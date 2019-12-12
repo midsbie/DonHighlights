@@ -1,12 +1,15 @@
 // @flow
 
-import type { QuerySet } from './typedefs';
+import EventEmitter from 'events';
+
 import * as dom from './dom';
 import TextRange from './TextRange';
+import Group from './Group';
+import Highlight from './Highlight';
+import { groupNamesToGroupSet } from './util';
 
 export type Marker = {|
-  query: QuerySet,
-  id: number,
+  highlight: Highlight,
   offset: number,
 |};
 
@@ -16,15 +19,36 @@ export type Marker = {|
  * Manages highlights as they appear on the page rather than on the DOM to enable correct cursor
  * movement from highlight to highlight.
  */
-class HighlightMarkers {
+class HighlightMarkers extends EventEmitter {
+  groups: Map<string, Group>;
   markers: Array<Marker>;
+  debouncedEmitTimerID: ?TimeoutID;
 
-  constructor() {
+  constructor(groups: Map<string, Group>) {
+    super();
+
+    this.groups = groups;
+    this.markers = [];
+    this.debouncedEmitTimerID = null;
+  }
+
+  dispose(): void {
+    if (this.debouncedEmitTimerID != null) {
+      clearTimeout(this.debouncedEmitTimerID);
+      this.debouncedEmitTimerID = null;
+    }
+
+    this.removeAllListeners();
     this.markers = [];
   }
 
-  add(query: QuerySet, id: number, hit: TextRange): void {
-    const offset = hit.start.marker.offset + hit.start.offset;
+  debouncedEmit(event: string, ...args: Array<any>): void {
+    if (this.debouncedEmitTimerID != null) clearTimeout(this.debouncedEmitTimerID);
+    this.debouncedEmitTimerID = setTimeout(() => this.emit(event, ...args), 1000 / 60);
+  }
+
+  add(highlight: Highlight): void {
+    const offset = highlight.range.getAbsoluteStartOffset();
     let mid;
     let min = 0;
     let max = this.markers.length - 1;
@@ -42,74 +66,84 @@ class HighlightMarkers {
     this.markers.splice(
       this.markers.length > 0 && this.markers[min].offset < offset ? min + 1 : min,
       0,
-      { query, id, offset }
+      { highlight, offset }
     );
+    this.debouncedEmit('update');
   }
 
-  removeAll(query: QuerySet): void {
+  remove(highlight: Highlight): boolean {
     const markers = this.markers;
 
     for (let i = 0; i < markers.length; ) {
-      if (markers[i].query === query) {
+      if (markers[i].highlight === highlight) {
         markers.splice(i, 1);
+        this.debouncedEmit('update');
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  removeGroup(group: Group): number {
+    let count = 0;
+    const markers = this.markers;
+
+    for (let i = 0; i < markers.length; ) {
+      if (markers[i].highlight.group === group) {
+        markers.splice(i, 1);
+        ++count;
       } else {
         ++i;
       }
     }
+
+    if (count > 0) this.emit('update');
+    return count;
   }
 
   get(index: number): Marker | null {
     return this.markers[index] || null;
   }
 
-  calculateTotal(queryNames: Array<string> | null): number {
-    if (queryNames == null) {
+  calculateTotal(groupNames: ?Array<string>): number {
+    if (groupNames == null) {
       return this.markers.length;
     }
 
-    return this.markers.reduce((acc, marker) => {
-      if ((queryNames: any).indexOf(marker.query.name) >= 0) {
-        return acc + 1;
-      }
-
-      return acc;
-    }, 0);
+    const groups = groupNamesToGroupSet(groupNames, this.groups);
+    return this.markers.reduce(
+      (acc, marker) => (groups.has(marker.highlight.group) ? acc + 1 : acc),
+      0
+    );
   }
 
-  calculateTotalVisible(queryNames: Array<string> | null): number {
-    // Simple fix for now that accounts for when we're running in a JsDOM environment, under which
-    // there are never any visible highlights.  This measure prevents tests from failing.
-    if (process.env.TEST_ENV_JSDOM) {
-      return this.calculateTotal(queryNames);
-    } else if (queryNames == null) {
-      return this.markers.reduce(
-        (acc, marker) => acc + Number(dom.isHighlightVisible(marker.id)),
-        0
-      );
+  calculateTotalActive(groupNames: ?Array<string>): number {
+    if (groupNames == null) {
+      return this.markers.reduce((acc, marker) => acc + Number(marker.highlight.isActive()), 0);
     }
 
-    return this.markers.reduce((acc, marker) => {
-      if ((queryNames: any).indexOf(marker.query.name) >= 0 && dom.isHighlightVisible(marker.id)) {
-        return acc + 1;
-      }
-
-      return acc;
-    }, 0);
+    const groups = groupNamesToGroupSet(groupNames, this.groups);
+    return this.markers.reduce(
+      (acc, marker) =>
+        groups.has(marker.highlight.group) && marker.highlight.isActive() ? acc + 1 : acc,
+      0
+    );
   }
 
-  find(at: number, queryNames: Array<string> | null): Marker | null {
+  find(at: number, groupNames: ?Array<string>): Marker | null {
+    const groups = groupNames == null ? null : groupNamesToGroupSet(groupNames, this.groups);
     let marker: Marker | null = null;
 
     this.markers.some(m => {
-      const q = m.query;
-
-      // Queryset must be enabled and highlight visible.  Note that highlights are never visible
-      // in non-browser environments, in which case highlights are assumed to be visible.
-      if (!q.enabled) {
+      const g = m.highlight.group;
+      // Group must be enabled and highlight active.  Note that highlights are never active
+      // in non-browser environments, in which case highlights are assumed to be active.
+      if (!g.enabled) {
         return false;
-      } else if (queryNames != null && queryNames.indexOf(q.name) < 0) {
+      } else if (groups != null && !groups.has(g)) {
         return false;
-      } else if (!process.env.TEST_ENV_JSDOM && !dom.isHighlightVisible(m.id)) {
+      } else if (!m.highlight.isActive()) {
         return false;
       } else if (at < 1) {
         marker = m;
@@ -121,24 +155,6 @@ class HighlightMarkers {
     });
 
     return marker;
-  }
-
-  assert(expectedSize: number): void {
-    let lastOffset = 0;
-    let size = 0;
-
-    this.markers.forEach(function(i) {
-      if (i.offset < lastOffset || i.id - i.query.highlightId >= i.query.length) {
-        throw new Error('Invalid state: highlight out of position');
-      }
-
-      lastOffset = i.offset;
-      ++size;
-    });
-
-    if (size !== expectedSize) {
-      throw new Error('Invalid state: size mismatch');
-    }
   }
 }
 

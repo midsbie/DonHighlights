@@ -2,23 +2,22 @@
 
 import merge from 'merge';
 
-import logger from './logger';
 import * as selection from './selection';
-import HtmlHighlighter from './HTMLHighlighter';
+import DOMHighlighter from './DOMHighlighter';
 import TextContent from './TextContent';
 import TextRange from './TextRange';
 
 /**
  * Support for translation of arbitrary ranges
  *
- * This class is an extension of HTML Highlighter which provides support for translation of
+ * This class is an extension of DOM Highlighter which provides support for translation of
  * arbitrary browser `Range` instances to internal `TextRange` ones, which can be used to compute
  * XPath descriptors or create highlights.
  */
 export default class RangeTranslator {
   content: TextContent;
 
-  static fromHtmlHighlighter(instance: HtmlHighlighter): RangeTranslator {
+  static fromDOMHighlighter(instance: DOMHighlighter): RangeTranslator {
     return new RangeTranslator(instance.content);
   }
 
@@ -28,41 +27,27 @@ export default class RangeTranslator {
 
   /* eslint-disable complexity, max-statements */
   /**
-   * Return the current selected text range in the form of a `TextRange` object
+   * Translate given `Range` instance to internal `TextRange` object
    *
-   * If there is no selected text, `null` is returned.
+   * If range is invalid or does not contain any text, `null` is returned.
    *
-   * @param {Range} [range] - Optional range to translate.  If omitted, the range associated with
-   * the current browser selection is used instead.
+   * @param {Range} range - Range to translate
    *
    * @returns {TextRange|null} The current selected text range or `null` if it could not be
    * computed.
    */
-  translate(range?: Range): TextRange | null {
-    // Default to current browser selection if range omitted.
-    if (range == null) {
-      const sel = window.getSelection();
-      if (sel == null) {
-        return null;
-      }
-
-      range = sel.getRangeAt(0);
-      if (range == null) {
-        return null;
-      }
-    }
-
+  translate(range: Range): ?TextRange {
     let start, end;
     try {
       start = selection.getNormalizedStartBoundaryPoint(range);
       end = selection.getNormalizedEndBoundaryPoint(range);
     } catch (x) {
-      logger.error('unable to compute boundary points:', x);
+      console.error('unable to compute boundary points:', x);
       return null;
     }
 
     if (start.node.nodeType !== Node.TEXT_NODE || end.node.nodeType !== Node.TEXT_NODE) {
-      logger.info('selection anchor or focus node(s) not text: ignoring');
+      console.info('selection anchor or focus node(s) not text: ignoring');
       return null;
     }
 
@@ -84,7 +69,7 @@ export default class RangeTranslator {
     const startOffset = this.content.find(start.node);
     const endOffset = start.node === end.node ? startOffset : this.content.find(end.node);
     if (startOffset < 0 || endOffset < 0) {
-      logger.error(
+      console.error(
         'unable to retrieve offset of selection anchor or focus node(s):',
         range.startContainer,
         start.node,

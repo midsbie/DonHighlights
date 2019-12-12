@@ -2,7 +2,7 @@
 
 import merge from 'merge';
 
-import type { TextSubject } from './typedefs';
+import type { HighlightTextQuery } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
 import TextRange from './TextRange';
@@ -28,18 +28,18 @@ export default class TextFinder extends Finder {
    * Class constructor
    *
    * @param {TextContent} content - Reference to `TextContent` instance
-   * @param {TextFinderSubject} subject - Subject string to match
+   * @param {HighlightTextQuery} query - Query string to match
    */
-  constructor(content: TextContent, subject: TextSubject) {
+  constructor(content: TextContent, query: HighlightTextQuery) {
     // Construct base class
     super(content);
 
     // Build an array containing all hits of `subject´
     let match;
     const re =
-      subject instanceof RegExp
-        ? subject
-        : new RegExp(subject.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
+      query instanceof RegExp
+        ? query
+        : new RegExp(query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
 
     while ((match = re.exec(this.content.text)) !== null) {
       // $FlowFixMe: erroring out on match below for some strange reason
@@ -62,7 +62,6 @@ export default class TextFinder extends Finder {
     const length = match.length;
     const start = this.getAt_(match.index);
     let end;
-
     // Re-use start marker descriptor if end offset within bounds of start text node
     if (start.offset + length <= start.marker.node.nodeValue.length) {
       end = merge({}, start);

@@ -1,23 +1,21 @@
 {
-  "name": "html-highlighter",
-  "title": "Html Highlighter",
-  "description": "Highlight and select phrases in HTML pages.",
-  "version": "0.4.3",
-  "main": "dist/htmlhighlighter.js",
-  "module": "src/main.js",
+  "name": "dom-highlighter",
+  "title": "DOM Highlighter",
+  "description": "Versatile library enabling highlighting of arbitrary phrases in live web pages",
+  "version": "1.0.0a",
+  "main": "lib/dom-highlighter.js",
+  "unpkg": "dist/dom-highlighter.js",
+  "module": "es/dom-highlighter.js",
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dossier/html-highlighter.git"
+    "url": "git+https://github.com/miguel-guedes/dom-highlighter.git"
   },
-  "keywords": [
-    "html",
-    "highlighter"
-  ],
-  "author": "Diffeo, Inc.",
+  "keywords": ["dom", "web", "highlighting", "highlights", "highlighter"],
+  "author": "Miguel Guedes <miguel.a.guedes@gmail.com> (https://github.com/miguel-guedes)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dossier/html-highlighter.git/issues"
+    "url": "https://github.com/miguel-guedes/dom-highlighter.git/issues"
   },
   "scripts": {
     "clean": "rimraf lib dist es coverage types",
@@ -25,12 +23,13 @@
     "watch": "rollup -c --watch",
     "upgrade": "yarn upgrade-interactive --latest",
     "check": "yarn run check:flow && yarn run check:lint && yarn run check:fmt && echo 'check: PASS'",
+    "test": "jest",
     "check:flow": "flow",
     "check:lint": "yarn run check:lint:src",
     "check:lint:nocache": "eslint --format $(sh/get-eslint-formatter) --color --max-warnings=0 ./src",
     "check:lint:src": "eslint --format $(sh/get-eslint-formatter) --color --cache --max-warnings=0 ./src",
-    "check:fmt": "yarn run check:fmt:js && yarn run check:fmt:json && yarn run check:fmt:md && yarn run check:fmt:css",
-    "check:fmt:js": "prettier './src/**/.js' --check",
+    "check:fmt": "yarn run check:fmt:js && yarn run check:fmt:json && yarn run check:fmt:md",
+    "check:fmt:js": "prettier './src/**/*.js' --check",
     "check:fmt:json": "prettier --parser json '**/package.json' --check",
     "check:fmt:md": "prettier --parser markdown '**/*.md' --check",
     "fix:fmt": "yarn run fix:fmt:js; yarn run fix:fmt:json; yarn run fix:fmt:md",
@@ -38,10 +37,7 @@
     "fix:fmt:json": "yarn run check:fmt:json --write",
     "fix:fmt:md": "yarn run check:fmt:md --write"
   },
-  "files": [
-    "src/*",
-    "dist/*"
-  ],
+  "files": ["dist/*", "es/*", "lib/*", "src/*"],
   "dependencies": {
     "@babel/runtime": "^7.7.6",
     "merge": "^1.2.1"
@@ -70,6 +66,8 @@
     "eslint-plugin-jest": "^23.1.1",
     "flow-bin": "^0.113.0",
     "flow-typed": "^2.6.2",
+    "jest": "^24.9.0",
+    "jest-junit": "^10.0.0",
     "jsdom": "^15.2.1",
     "jsdom-global": "^3.0.2",
     "prettier": "^1.19.1",

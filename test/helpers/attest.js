@@ -1,51 +1,38 @@
-/* eslint-disable no-use-before-define */
-import chai from 'chai';
+// @flow
 
 import * as instance from './instance';
 import * as ops from './operations';
-import * as tools from './toolbox';
 
-const { assert } = chai;
-
-function clear() {
-  assert.strictEqual(
-    instance.querySelectorAll('.hh-highlight').length,
-    0,
-    'there are no highlights'
-  );
-
+export function clear(): void {
+  expect(instance.querySelectorAll('.hh-highlight').length).toBe(0);
   totalHighlights(0, 0);
 }
 
-/**
- * Total highlights and query set assertion
- *
- * @param {number} hc - Highlight count
- * @param {number} qc - Query set count
- */
-function totalHighlights(hc, qc = 1) {
-  const queries = new Set();
+export function totalHighlights(hc: number, gc: number = 1): void {
+  const groups = new Set();
   const highlights = new Set();
 
-  for (const el of instance.querySelectorAll('.hh-highlight')) {
+  for (const el of instance.querySelectorAll('.dh-highlight')) {
     /* eslint-disable no-empty */
     try {
-      const qid = el.className.match(/hh-highlight-(\d+)/)[1];
-      const hid = el.className.match(/hh-highlight-id-(\d+)/)[1];
-      queries.add(qid);
+      const gid = el.className.match(/dh-highlight-group-(\w+)/)[1];
+      const hid = el.dataset.highlightId;
+      expect(gid).toBeTruthy();
+      expect(hid).toBeTruthy();
+      groups.add(gid);
       highlights.add(hid);
     } catch (x) {}
     /* eslint-enable no-empty */
   }
 
-  const hl = instance.get();
-  assert.strictEqual(queries.size, qc);
-  assert.strictEqual(highlights.size, hc);
-  assert.strictEqual(hl.stats.queries, qc);
-  assert.strictEqual(hl.stats.total, hc);
+  expect(groups.size).toBe(gc);
+  expect(highlights.size).toBe(hc);
+
+  const dl = instance.get();
+  expect(dl.groups.size).toBe(gc);
 }
 
-function selectionRange(range) {
+export function selectionRange(range) {
   assert.isNotNull(range, 'have selection range');
   assert.isObject(range);
   assert.isFunction(range.computeXpath);
@@ -60,7 +47,7 @@ function selectionRange(range) {
   assert.deepProperty(xpath, 'end.offset', 'xpath has valid structure');
 }
 
-function highlight(id, text) {
+export function highlight(id, text) {
   let l = 0;
   let t = '';
 
@@ -73,20 +60,20 @@ function highlight(id, text) {
   assert.strictEqual(l, text.length, 'expected highlight length');
 }
 
-function cursor(position, total = null) {
+export function cursor(position, total = null) {
   const hl = instance.get();
   assert.strictEqual(hl.cursor.total, total == null ? hl.stats.total : total);
   assert.strictEqual(hl.cursor.index, position);
 }
 
-function currentHighlight(id) {
+export function currentHighlight(id) {
   const el = document.querySelector(`.hh-highlight-id-${id}`);
   assert.ok(el != null);
   assert.ok(el.classList.contains('hh-enabled'));
 }
 
 // function className(element: Element, className: string | Array<string>): void {
-function className(element, classNames) {
+export function className(element, classNames) {
   const elc = tools.classNameToSet(element.className);
   const cmpc = tools.classNameToSet(classNames);
 
@@ -97,25 +84,13 @@ function className(element, classNames) {
 }
 
 // function classNameAll(elements: NodeList<Element>, classNames: string | Array<string>): void {
-function classNameAll(elements, classNames) {
+export function classNameAll(elements, classNames) {
   for (const el of elements) {
     className(el, classNames);
   }
 }
 
-function snapshot(old) {
+export function snapshot(old) {
   const current = instance.snapshot();
   assert.deepEqual(current, old);
 }
-
-export {
-  clear,
-  totalHighlights,
-  selectionRange,
-  highlight,
-  cursor,
-  currentHighlight,
-  className,
-  classNameAll,
-  snapshot,
-};

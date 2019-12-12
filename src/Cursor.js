@@ -2,13 +2,13 @@
 
 import EventEmitter from 'events';
 
-import type { ScrollToCallback } from './typedefs';
-import { Css } from './consts';
-import logger from './logger';
 import * as dom from './dom';
 import HighlightMarkers from './HighlightMarkers';
+import HighlightDecorator from './HighlightDecorator';
+import Highlight from './Highlight';
 
 export type IterableQueries = string | Array<string>;
+export type ScrollToCallback = HTMLElement => void;
 
 /**
  * Class responsible for managing the state of the highlight cursor
@@ -21,8 +21,10 @@ export type IterableQueries = string | Array<string>;
  */
 class Cursor extends EventEmitter {
   markers: HighlightMarkers;
+  decorator: HighlightDecorator;
   index: number;
-  iterableQueries: Array<string> | null;
+  active: ?Highlight;
+  iterableQueries: ?Array<string>;
   total: number;
 
   /**
@@ -30,14 +32,23 @@ class Cursor extends EventEmitter {
    *
    * @param {HighlightMarkers} markers - Reference to highlight markers object
    */
-  constructor(markers: HighlightMarkers) {
+  constructor(markers: HighlightMarkers, decorator: HighlightDecorator) {
     super();
 
     this.markers = markers;
+    this.decorator = decorator;
+    markers.on('update', () => this.update());
+
     this.index = -1;
+    this.active = null;
     this.iterableQueries = null;
     this.total = 0;
     this.setIterableQueries(null);
+  }
+
+  dispose(): void {
+    this.removeAllListeners();
+    this.iterableQueries = null;
   }
 
   /**
@@ -58,10 +69,10 @@ class Cursor extends EventEmitter {
    *
    * The restriction can be lifted at any time by passing `null` to the method.
    *
-   * @param {IterableQueries | null} queries - An array (or string) containing the query set names
+   * @param {?IterableQueries} queries - An array (or string) containing the query set names
    * or `null` if all query-sets active.
    */
-  setIterableQueries(queries: IterableQueries | null): void {
+  setIterableQueries(queries: ?IterableQueries): void {
     if (queries == null) {
       this.iterableQueries = null;
     } else if (typeof queries === 'string') {
@@ -77,14 +88,15 @@ class Cursor extends EventEmitter {
   /**
    * Update the total of iterable highlights
    *
-   * Causes recomputation of the total available number of visible highlights and produces the
+   * Causes recomputation of the total available number of active highlights and produces the
    * update event if this number changes.  The event can be forcefully produced it `force` is set
    * to `true`.
    *
    * @param { boolean } force - When `true` causes the "update" event to always be emitted
    */
   update(force: boolean = false): void {
-    const total = this.markers.calculateTotalVisible(this.iterableQueries);
+    const total = this.markers.calculateTotalActive(this.iterableQueries);
+
     if (force || total !== this.total) {
       this.total = total;
       this.emit('update', this.index, this.total);
@@ -97,7 +109,7 @@ class Cursor extends EventEmitter {
    * @param {number} index - Virtual cursor index
    * @param {boolean} dontRecurse - When `true` instructs the method not to employ recursion
    * @param {ScrollToCallback} scrollTo - Optional custom function to invoke if highlight being
-   * moved to is not visible on the page
+   * moved to is not active on the page
    *
    * @returns {boolean} `true` if move occurred
    */
@@ -107,7 +119,6 @@ class Cursor extends EventEmitter {
     }
 
     const marker = this.markers.find(index, this.iterableQueries);
-
     // If index overflown, set to first highlight
     if (marker == null) {
       if (!dontRecurse) {
@@ -118,20 +129,21 @@ class Cursor extends EventEmitter {
 
     // Clear currently active highlight, if any, and set requested highlight active
     this.clearActive_();
-    const coll = dom.getHighlightElements(marker.id);
+    const coll = marker.highlight.elements;
     // Scroll viewport if element not visible
     if (coll.length > 0) {
-      dom.addClass(coll, Css.enabled);
+      this.active = marker.highlight;
+      this.decorator.setActive(this.active);
 
       const first = coll[0];
       if (typeof scrollTo === 'function') {
         try {
           scrollTo(first);
         } catch (x) {
-          logger.error('failed to scroll to highlight:', x);
+          console.error('failed to scroll to highlight:', x);
         }
       } else if (!dom.isInView(first)) {
-        dom.scrollIntoView(first);
+        first.scrollIntoView();
       }
     }
 
@@ -180,9 +192,9 @@ class Cursor extends EventEmitter {
    * @access private
    */
   clearActive_(): void {
-    const { enabled: cssEnabled } = Css;
-    for (const el of dom.getAllHighlightElements(cssEnabled)) {
-      dom.removeClass(el, cssEnabled);
+    if (this.active != null) {
+      this.decorator.setInactive(this.active);
+      this.active = null;
     }
   }
 }
