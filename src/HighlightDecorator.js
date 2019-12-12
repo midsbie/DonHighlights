@@ -7,7 +7,7 @@ export default class HighlightDecorator {
     const groupClass = `dh-highlight-group-${hl.group.id}`;
 
     for (const el of elements) {
-      el.dataset.highlightId = hl.id;
+      el.dataset.dhHighlightId = hl.id;
       el.classList.add('dh-highlight', groupClass);
 
       if (hl.enabled) el.classList.remove('dh-disabled');

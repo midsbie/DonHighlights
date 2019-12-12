@@ -16,7 +16,7 @@ export function totalHighlights(hc: number, gc: number = 1): void {
     /* eslint-disable no-empty */
     try {
       const gid = el.className.match(/dh-highlight-group-(\w+)/)[1];
-      const hid = el.dataset.highlightId;
+      const hid = el.dataset.dhHighlightId;
       expect(gid).toBeTruthy();
       expect(hid).toBeTruthy();
       groups.add(gid);
