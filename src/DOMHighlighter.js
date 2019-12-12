@@ -3,11 +3,10 @@
 import EventEmitter from 'events';
 
 import type { HighlightQuery } from './typedefs';
-import { createFinder } from './factory';
+import createFinder from './createFinder';
 import TextContent from './TextContent';
 import HighlightMarkers from './HighlightMarkers';
 import Group from './Group';
-import Highlight from './Highlight';
 import Cursor from './Cursor';
 import TextRange from './TextRange';
 import IdGenerator from './IdGenerator';

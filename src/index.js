@@ -1,8 +1,9 @@
 // @flow
 
 export type { HighlightTextQuery, HighlightXPathQuery } from './typedefs';
-export { createHighlighter } from './factory';
-export type { Options } from './factory';
+export { default as createHighlighter } from './createHighlighter';
+export * from './createHighlighter';
+export { default as createFinder } from './createFinder';
 export type { RangeXPathDescriptor } from './TextRange';
 export * from './HighlightRenderer'; // skipping default
 
