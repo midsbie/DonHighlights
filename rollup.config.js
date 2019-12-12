@@ -24,7 +24,7 @@ export default [
   // CommonJS
   {
     input,
-    output: { file: 'lib/html-highlighter.js', format: 'cjs', indent: false },
+    output: { file: 'lib/dom-highlighter.js', format: 'cjs', indent: false },
     external: makeExternalPredicate([
       ...Object.keys(pkg.dependencies || {}),
       ...Object.keys(pkg.peerDependencies || {}),
@@ -44,7 +44,7 @@ export default [
   // ES
   {
     input,
-    output: { file: 'es/html-highlighter.js', format: 'es', indent: false },
+    output: { file: 'es/dom-highlighter.js', format: 'es', indent: false },
     external: makeExternalPredicate([
       ...Object.keys(pkg.dependencies || {}),
       ...Object.keys(pkg.peerDependencies || {}),
@@ -66,7 +66,7 @@ export default [
   // ES for Browsers
   {
     input,
-    output: { file: 'es/html-highlighter.mjs', format: 'es', indent: false },
+    output: { file: 'es/dom-highlighter.mjs', format: 'es', indent: false },
     plugins: [
       nodeResolve({
         extensions,
@@ -101,9 +101,9 @@ export default [
   {
     input,
     output: {
-      file: 'dist/html-highlighter.js',
+      file: 'dist/dom-highlighter.js',
       format: 'umd',
-      name: 'HTML Highlighter',
+      name: 'DOM Highlighter',
       indent: false,
     },
     plugins: [
@@ -125,9 +125,9 @@ export default [
   {
     input,
     output: {
-      file: 'dist/html-highlighter.min.js',
+      file: 'dist/dom-highlighter.min.js',
       format: 'umd',
-      name: 'HTML Highlighter',
+      name: 'DOM Highlighter',
       indent: false,
     },
     plugins: [
