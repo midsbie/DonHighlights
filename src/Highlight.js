@@ -3,12 +3,9 @@
 import EventEmitter from 'events';
 
 import type { XPath } from './typedefs';
-import * as dom from './dom';
 import Group from './Group';
 import TextRange from './TextRange';
-import type { RangeDescriptor } from './TextRange';
 import HighlightRenderer from './HighlightRenderer';
-import HighlightDecorator from './HighlightDecorator';
 
 export type HighlightJSON = XPath;
 

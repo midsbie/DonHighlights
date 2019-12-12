@@ -2,8 +2,6 @@
 
 import EventEmitter from 'events';
 
-import * as dom from './dom';
-import TextRange from './TextRange';
 import Group from './Group';
 import Highlight from './Highlight';
 import { groupNamesToGroupSet } from './util';

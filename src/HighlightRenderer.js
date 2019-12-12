@@ -1,8 +1,6 @@
 // @flow
 
-import * as dom from './dom';
 import TextContent from './TextContent';
-import TextRange from './TextRange';
 import type { RangeDescriptor } from './TextRange';
 import TextNodeVisitor from './TextNodeVisitor';
 import HighlightDecorator from './HighlightDecorator';

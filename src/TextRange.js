@@ -1,6 +1,5 @@
 // @flow
 
-import * as dom from './dom';
 import TextContent from './TextContent';
 import TextNodeVisitor from './TextNodeVisitor';
 import TextNodeXPath from './TextNodeXPath';

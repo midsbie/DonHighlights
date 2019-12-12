@@ -2,7 +2,6 @@
 
 import EventEmitter from 'events';
 
-import type { HighlightQuery } from './typedefs';
 import DOMHighlighter from './DOMHighlighter';
 import TextRange from './TextRange';
 import Highlight from './Highlight';
