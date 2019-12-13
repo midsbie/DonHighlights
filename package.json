@@ -2,7 +2,7 @@
   "name": "dom-highlighter",
   "title": "DOM Highlighter",
   "description": "Versatile library enabling highlighting of arbitrary phrases in live web pages",
-  "version": "1.0.0a",
+  "version": "1.0.0-rc1",
   "main": "lib/dom-highlighter.js",
   "unpkg": "dist/dom-highlighter.js",
   "module": "es/dom-highlighter.js",
