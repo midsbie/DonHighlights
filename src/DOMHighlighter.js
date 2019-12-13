@@ -104,6 +104,12 @@ export default class DOMHighlighter extends EventEmitter {
     return group;
   }
 
+  count(): number {
+    let count = 0;
+    this.groups.forEach(g => (count += g.highlights.size));
+    return count;
+  }
+
   forEach(predicate: ForEachPredicate): void {
     this.groups.forEach(g => g.forEach(predicate));
   }

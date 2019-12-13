@@ -3,7 +3,7 @@
 import { DOMHighlighter } from '../src';
 import Group from '../src/Group';
 
-import { instance } from './helpers';
+import { instance, counts } from './helpers';
 
 describe('DOM Highlighter', function() {
   let dh: DOMHighlighter;
@@ -88,5 +88,11 @@ describe('DOM Highlighter', function() {
     dh.setContainer(div);
     expect(dh.container).toBe(div);
     expect(dh.content.root).toBe(div);
+  });
+
+  it('counts number of highlights', () => {
+    const group = dh.create('test');
+    dh.query('the', hit => group.highlight(hit));
+    expect(dh.count()).toBe(counts.the);
   });
 });
