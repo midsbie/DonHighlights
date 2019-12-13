@@ -2,12 +2,12 @@
 
 import EventEmitter from 'events';
 
-import type { XPath } from './typedefs';
+import type { XPathRange } from './typedefs';
 import { calculateBoundingRect } from './dom';
 import Group from './Group';
 import TextRange from './TextRange';
 
-export type HighlightJSON = XPath;
+export type HighlightJSON = XPathRange;
 
 export interface IHighlightDecorator {
   decorate(highlight: Class<Highlight>): void;

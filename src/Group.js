@@ -2,7 +2,7 @@
 
 import EventEmitter from 'events';
 
-import type { ForEachPredicate, SomePredicate } from './typedefs';
+import type { ForEachPredicate, SomePredicate } from './interfaces';
 import HighlightMarkers from './HighlightMarkers';
 import HighlightRenderer from './HighlightRenderer';
 import IdGenerator from './IdGenerator';

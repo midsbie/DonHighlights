@@ -2,7 +2,8 @@
 
 import EventEmitter from 'events';
 
-import type { HighlightQuery, ForEachPredicate, SomePredicate } from './typedefs';
+import type { HighlightQuery } from './typedefs';
+import type { ForEachPredicate, SomePredicate } from './interfaces';
 import createFinder from './createFinder';
 import TextContent from './TextContent';
 import HighlightMarkers from './HighlightMarkers';

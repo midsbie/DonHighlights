@@ -2,7 +2,7 @@
 
 import merge from 'merge';
 
-import type { IIdGenerator } from './typedefs';
+import type { IIdGenerator } from './interfaces';
 import DOMHighlighter from './DOMHighlighter';
 import type { IHighlightDecorator } from './Highlight';
 import IdGenerator from './IdGenerator';

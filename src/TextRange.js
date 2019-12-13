@@ -1,16 +1,12 @@
 // @flow
 
+import type { XPathRange } from './typedefs';
 import TextContent from './TextContent';
 import TextNodeVisitor from './TextNodeVisitor';
 import TextNodeXPath from './TextNodeXPath';
 import type { Marker } from './TextContent';
 
 export type RangeDescriptor = {| marker: Marker, offset: number |};
-
-export type RangeXPathDescriptor = {|
-  start: { xpath: string, offset: number },
-  end: { xpath: string, offset: number },
-|};
 
 /**
  * Holds a representation of a range between two text nodes
@@ -64,7 +60,7 @@ export default class TextRange {
    *
    * @returns {RangeXPathDescriptor} XPath representation of active range
    */
-  computeXPath(): RangeXPathDescriptor {
+  computeXPath(): XPathRange {
     const start = this.start.marker.node;
     const end = this.end.marker.node;
     const computor = new TextNodeXPath(this.content.root);
