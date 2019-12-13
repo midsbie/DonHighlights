@@ -1,15 +1,17 @@
 node_modules
 
+# Artifacts
+coverage
 dist
 es
 lib
-
 *.zip
 *.tgz
 .eslintcache
 yarn-error.log
 junit.xml
 
+# Editor-generated files
 *~
 \#*
 \.\#*

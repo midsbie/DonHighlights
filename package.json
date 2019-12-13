@@ -20,8 +20,8 @@
   "scripts": {
     "upgrade": "yarn upgrade-interactive --latest",
     "check": "yarn run check:flow && yarn run check:lint && yarn run check:fmt && echo 'check: PASS'",
-    "check:full": "yarn run check && yarn run clean && yarn run test && yarn run build",
-    "clean": "rimraf lib dist es coverage types",
+    "check:push": "yarn run check && yarn run clean && yarn run test && yarn run build",
+    "clean": "rimraf coverage dist es lib junit.xml yarn-error.log",
     "test": "jest",
     "build": "rollup -c && yarn run build:flow",
     "build:flow": "echo \"// @flow\\n\\nexport * from '../src';\" > lib/dom-highlighter.js.flow",
