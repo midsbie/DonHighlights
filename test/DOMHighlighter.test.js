@@ -95,4 +95,21 @@ describe('DOM Highlighter', function() {
     dh.query('the', hit => group.highlight(hit));
     expect(dh.count()).toBe(counts.the);
   });
+
+  it('produces highlight event when highlighting from query hit', () => {
+    let count = 0;
+    const group = dh.create('test');
+    dh.on('highlight', () => ++count);
+    dh.query('the', hit => group.highlight(hit));
+    expect(count).toBe(counts.the);
+  });
+
+  it('produces unhighlight events when clearing', () => {
+    let count = 0;
+    const group = dh.create('test');
+    dh.on('unhighlight', () => ++count);
+    dh.query('the', hit => group.highlight(hit));
+    dh.clear();
+    expect(count).toBe(counts.the);
+  });
 });

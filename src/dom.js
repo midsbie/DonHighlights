@@ -125,3 +125,7 @@ export function calculateBoundingRect(rects: Array<DOMRect>): DOMRect {
   // $FlowFixMe: DOMRect not DOMRectReadOnly
   return new DOMRect(x0, y0, x1 - x0, y1 - y0);
 }
+
+export function getSelectorForHighlightId(id: string): string {
+  return `[data-dh-highlight-id="${id}"]`;
+}

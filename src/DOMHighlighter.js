@@ -77,6 +77,9 @@ export default class DOMHighlighter extends EventEmitter {
       this.emit('remove', group);
     });
 
+    group.on('highlight', hl => this.emit('highlight', hl));
+    group.on('unhighlight', hl => this.emit('unhighlight', hl));
+
     this.groups.set(name, group);
     return group;
   }

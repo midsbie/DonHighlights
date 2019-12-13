@@ -79,10 +79,15 @@ export default class Group extends EventEmitter {
       // nop
     }
 
-    hl.on('remove', () => this.highlights.delete(hl.id));
+    hl.on('remove', () => {
+      this.highlights.delete(hl.id);
+      this.emit('unhighlight', hl);
+    });
+
     hl.render();
     this.highlights.set(hl.id, hl);
     this.markers.add(hl);
+    this.emit('highlight', hl);
   }
 
   highlight(range: TextRange): Highlight {

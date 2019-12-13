@@ -108,4 +108,19 @@ describe('Group', function() {
     expect(dh.groups.size).toBe(0);
     expect((document.body: any).textContent).toBe(text);
   });
+
+  it('produces highlight event when highlighting from query hit', () => {
+    let count = 0;
+    group.on('highlight', () => ++count);
+    dh.query('the', hit => group.highlight(hit));
+    expect(count).toBe(counts.the);
+  });
+
+  it('produces unhighlight events when clearing', () => {
+    let count = 0;
+    group.on('unhighlight', () => ++count);
+    dh.query('the', hit => group.highlight(hit));
+    group.clear();
+    expect(count).toBe(counts.the);
+  });
 });
