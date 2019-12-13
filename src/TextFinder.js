@@ -2,7 +2,7 @@
 
 import merge from 'merge';
 
-import type { HighlightTextQuery } from './typedefs';
+import type { TextQuery } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
 import TextRange from './TextRange';
@@ -13,24 +13,24 @@ import TextRange from './TextRange';
  */
 export default class TextFinder extends Finder {
   /**
-   * Determine if given subject is of type accepted by the `TextFinder` class
+   * Determine if given value is of type accepted by the `TextFinder` class
    *
-   * This method determines if a given subject can be used to instantiate a `TextFinder` class.
+   * This method determines if a given value can be used to instantiate a `TextFinder` class.
    *
-   * @param {any} subject - Subject to determine
+   * @param {TextQuery} subject - Value to determine
    * @returns {boolean} `true` if subject can be used to instantiate a `TextFinder` class
    */
-  static isSubject(subject: any): boolean {
-    return typeof subject === 'string' || subject instanceof RegExp;
+  static isQuery(value: any): boolean {
+    return typeof value === 'string' || value instanceof RegExp;
   }
 
   /**
    * Class constructor
    *
    * @param {TextContent} content - Reference to `TextContent` instance
-   * @param {HighlightTextQuery} query - Query string to match
+   * @param {TextQuery} query - Query string to match
    */
-  constructor(content: TextContent, query: HighlightTextQuery) {
+  constructor(content: TextContent, query: TextQuery) {
     // Construct base class
     super(content);
 
@@ -50,10 +50,10 @@ export default class TextFinder extends Finder {
   /**
    * Return next available match
    *
-   * @returns {TextRange | null} Returns a `TextRange` if a match is available, or `null` if no
+   * @returns {?TextRange} Returns a `TextRange` if a match is available, or `null` if no
    * more matches are available.
    */
-  next(): TextRange | null {
+  next(): ?TextRange {
     if (this.current >= this.results.length) {
       return null;
     }

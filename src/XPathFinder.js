@@ -1,6 +1,6 @@
 // @flow
 
-import type { HighlightXPathQuery } from './typedefs';
+import type { XPathRange } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
 import TextNodeXPath from './TextNodeXPath';
@@ -15,12 +15,10 @@ export default class XPathFinder extends Finder {
    * Class constructor
    *
    * @param {TextContent} content - Reference to `TextContent` instance
-   * @param {HighlightXPathQuery} subject - Descriptor containing an XPath representation and
+   * @param {XPathRange} subject - Descriptor containing an XPath representation with
    * start and end offsets.
    */
-  // FIXME: what type is `subject`?
-  constructor(content: TextContent, subject: HighlightXPathQuery) {
-    // Construct base class
+  constructor(content: TextContent, subject: XPathRange) {
     super(content);
 
     if (subject.start.offset < 0 || subject.end.offset < 0) {

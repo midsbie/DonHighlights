@@ -2,7 +2,7 @@
 
 import EventEmitter from 'events';
 
-import type { HighlightQuery } from './typedefs';
+import type { QuerySubject } from './typedefs';
 import type { ForEachPredicate, SomePredicate } from './interfaces';
 import createFinder from './createFinder';
 import TextContent from './TextContent';
@@ -14,8 +14,7 @@ import IdGenerator from './IdGenerator';
 import HighlightRenderer from './HighlightRenderer';
 import HighlightDecorator from './HighlightDecorator';
 
-export type HighlightHits = Array<TextRange>;
-type QueryPredicate = TextRange => any;
+type QueryPredicate = (hit: TextRange) => any;
 
 export default class DOMHighlighter extends EventEmitter {
   container: HTMLElement;
@@ -123,7 +122,7 @@ export default class DOMHighlighter extends EventEmitter {
     return false;
   }
 
-  query(query: HighlightQuery, predicate: QueryPredicate): void {
+  query(query: QuerySubject, predicate: QueryPredicate): void {
     const finder = createFinder(this.content, query);
 
     let hit;

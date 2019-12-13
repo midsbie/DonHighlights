@@ -1,6 +1,6 @@
 // @flow
 
-export type { XPathRange, HighlightTextQuery, HighlightXPathQuery } from './typedefs';
+export type { XPathRange, QuerySubject } from './typedefs';
 export { default as createHighlighter } from './createHighlighter';
 export * from './createHighlighter';
 export { default as createFinder } from './createFinder';

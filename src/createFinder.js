@@ -1,6 +1,6 @@
 // @flow
 
-import type { HighlightQuery } from './typedefs';
+import type { QuerySubject } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
 import TextFinder from './TextFinder';
@@ -16,9 +16,9 @@ import XPathFinder from './XPathFinder';
  *
  * @returns {Finder} finder instance ready for use
  */
-export default function createFinder(content: TextContent, query: HighlightQuery): Finder {
+export default function createFinder(content: TextContent, query: QuerySubject): Finder {
   // FIXME: employ more robust check below that doesn't assume XPath finder by default
-  return TextFinder.isSubject(query)
+  return TextFinder.isQuery(query)
     ? new TextFinder(content, (query: any))
     : new XPathFinder(content, (query: any));
 }

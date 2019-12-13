@@ -5,11 +5,5 @@ export type XPathRange = {|
   end: {| xpath: string, offset: number |},
 |};
 
-export type HighlightTextQuery = string | RegExp;
-
-export type HighlightXPathQuery = {|
-  ...XPathRange,
-  state?: any,
-|};
-
-export type HighlightQuery = HighlightTextQuery | HighlightXPathQuery;
+export type TextQuery = string | RegExp;
+export type QuerySubject = TextQuery | XPathRange;
