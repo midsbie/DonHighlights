@@ -1,8 +1,6 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
-import merge from 'merge';
-
 import { createHighlighter, DOMHighlighter } from '../../src';
 
 import { documents } from './tests';
@@ -10,7 +8,6 @@ import { documents } from './tests';
 // Test-wide global attributes
 let container;
 let instance;
-let full = false;
 
 export function assertJsDOM() {
   // Ensure window and document exist in jsdom environment
@@ -24,45 +21,27 @@ export function init(ndx: number = 0, options?: Object): DOMHighlighter {
 
   const data = documents[ndx || 0];
   expect(data).toBeTruthy();
-  document.body.innerHTML = data;
+  (document.body: any).innerHTML = data;
   container = document.body;
 
   instance = createHighlighter(options);
   return instance;
 }
 
-export function get(what: 'instance' | 'container' | 'all') {
-  switch (what) {
-    case undefined:
-    case null:
-    case 'instance':
-      return instance;
-
-    case 'container':
-      return container;
-
-    case 'all':
-      return { container, highlighter: instance };
-
-    default:
-      throw new Error(`Unknown type: ${what}`);
-  }
+export function querySelector(selector: string): ?HTMLElement {
+  return getContainer().querySelector(selector);
 }
 
-export function querySelector(selector) {
-  return container.querySelector(selector);
+export function querySelectorAll(selector: string): NodeList<HTMLElement> {
+  return getContainer().querySelectorAll(selector);
 }
 
-export function querySelectorAll(selector) {
-  return container.querySelectorAll(selector);
+export function getInstance(): DOMHighlighter {
+  if (!instance) throw new Error('Highlighter not instantiated');
+  return instance;
 }
 
-export function snapshot() {
-  const hl = get();
-  return {
-    stats: merge({}, hl.stats),
-    lastId: hl.lastId,
-    queries: new Map(hl.queries),
-    state: new Map(hl.state),
-  };
+export function getContainer(): HTMLElement {
+  if (!container) throw new Error('Invalid or null container');
+  return container;
 }

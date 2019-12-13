@@ -27,7 +27,7 @@ describe('Highlight', function() {
   it('is active by default', () => {
     let hl;
     dh.query(tests.overlapping.queries[0], hit => (hl = group.highlight(hit)));
-    attest.totalHighlights(1, 1);
+    attest.totalHighlightsInDOM(1, 1);
     if (hl == null) throw new Error('null highlight');
     hl.elements[0].getBoundingClientRect = () => ({ height: 1, width: 1 });
     expect(hl.isActive()).toBe(true);
@@ -53,7 +53,7 @@ describe('Highlight', function() {
   it('emits event when removing', () => {
     let hl, removed;
     dh.query(tests.overlapping.queries[0], hit => (hl = group.highlight(hit)));
-    attest.totalHighlights(1, 1);
+    attest.totalHighlightsInDOM(1, 1);
     if (hl == null) throw new Error('null highlight');
     hl.once('remove', () => (removed = true));
     hl.remove();
@@ -63,7 +63,7 @@ describe('Highlight', function() {
   it('removes all highlight nodes', () => {
     let hl;
     dh.query(tests.overlapping.queries[0], hit => (hl = group.highlight(hit)));
-    attest.totalHighlights(1, 1);
+    attest.totalHighlightsInDOM(1, 1);
     if (hl == null) throw new Error('null highlight');
     hl.elements.forEach(el => expect(el.parentNode).toBeTruthy());
     hl.remove();

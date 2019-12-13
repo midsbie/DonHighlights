@@ -36,16 +36,16 @@ describe('DOM Highlighter', function() {
     expect(() => dh.create('standard')).toThrow();
   });
 
-  it('removes all groups', () => {
+  it('reset removes all groups', () => {
     const g1 = dh.create('group-one');
     expect(dh.groups.size).toBe(1);
     const g2 = dh.create('group-two');
     expect(dh.groups.size).toBe(2);
-    dh.clear();
+    dh.reset();
     expect(dh.groups.size).toBe(0);
   });
 
-  it('emits event when removing group', () => {
+  it('emits event for each group removed during reset', () => {
     let count = 0;
     dh.on('remove', () => ++count);
 
@@ -53,9 +53,29 @@ describe('DOM Highlighter', function() {
     expect(dh.groups.size).toBe(1);
     const g2 = dh.create('group-two');
     expect(dh.groups.size).toBe(2);
-    dh.clear();
+    dh.reset();
     expect(dh.groups.size).toBe(0);
     expect(count).toBe(2);
+  });
+
+  it('emits event when manually removing group', () => {
+    let count = 0;
+    dh.on('remove', () => ++count);
+
+    const g1 = dh.create('yellow');
+    expect(dh.groups.size).toBe(1);
+    dh.group('yellow').remove();
+    expect(dh.groups.size).toBe(0);
+    expect(count).toBe(1);
+  });
+
+  it('does not remove groups when clearing', () => {
+    const g1 = dh.create('group-one');
+    expect(dh.groups.size).toBe(1);
+    const g2 = dh.create('group-two');
+    expect(dh.groups.size).toBe(2);
+    dh.clear();
+    expect(dh.groups.size).toBe(2);
   });
 
   it('sets default container to document body', () => {

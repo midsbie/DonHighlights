@@ -2,4 +2,8 @@
 
 export * as instance from './instance';
 export * as attest from './attest';
-export * from './tests';
+
+// The following form does not seem to work:
+//   export * from './tests';
+import { documents, counts, tests } from './tests';
+export { documents, counts, tests };
