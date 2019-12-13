@@ -96,7 +96,7 @@ class HighlightMarkers extends EventEmitter {
       }
     }
 
-    if (count > 0) this.emit('update');
+    if (count > 0) this.debouncedEmit('update');
     return count;
   }
 

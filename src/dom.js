@@ -96,3 +96,32 @@ export function findLastTextNode(container: HTMLElement): Node | null {
 
   return lastTextNode;
 }
+
+/**
+ * Calculate bounding rect of array of rects
+ *
+ * @param {Array<DOMRect>} rects - Array of rects
+ * @returns {DomRect} Bounding rect
+ */
+export function calculateBoundingRect(rects: Array<DOMRect>): DOMRect {
+  const rect = rects[0];
+  if (rect == null) {
+    // $FlowFixMe: DOMRect not DOMRectReadOnly
+    return new DOMRect(0, 0, 0, 0);
+  }
+
+  let x0 = rect.left;
+  let y0 = rect.top;
+  let x1 = rect.right;
+  let y1 = rect.bottom;
+
+  rects.forEach(r => {
+    if (r.left < x0) x0 = r.left;
+    if (r.top < y0) y0 = r.top;
+    if (r.right > x1) x1 = r.right;
+    if (r.bottom > y1) y1 = r.bottom;
+  });
+
+  // $FlowFixMe: DOMRect not DOMRectReadOnly
+  return new DOMRect(x0, y0, x1 - x0, y1 - y0);
+}

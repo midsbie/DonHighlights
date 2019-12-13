@@ -2,7 +2,7 @@
 
 import EventEmitter from 'events';
 
-import type { HighlightQuery } from './typedefs';
+import type { HighlightQuery, ForEachPredicate, SomePredicate } from './typedefs';
 import createFinder from './createFinder';
 import TextContent from './TextContent';
 import HighlightMarkers from './HighlightMarkers';
@@ -23,7 +23,7 @@ export default class DOMHighlighter extends EventEmitter {
   idGenerator: IdGenerator;
   markers: HighlightMarkers;
   groups: Map<string, Group>;
-  highlightRenderer: HighlightRenderer;
+  renderer: HighlightRenderer;
 
   constructor(
     container: HTMLElement,
@@ -39,7 +39,7 @@ export default class DOMHighlighter extends EventEmitter {
     this.markers = new HighlightMarkers(this.groups);
     this.cursor = new Cursor(this.markers, highlightDecorator);
 
-    this.highlightRenderer = new HighlightRenderer(this.content, highlightDecorator);
+    this.renderer = new HighlightRenderer(this.content, highlightDecorator);
     this.idGenerator = idGenerator;
   }
 
@@ -66,20 +66,12 @@ export default class DOMHighlighter extends EventEmitter {
     }
   }
 
-  clear(): void {
-    if (this.groups.size > 0) {
-      this.groups.forEach(g => g.remove());
-    }
-
-    this.refresh();
-  }
-
   create(name: string): Group {
     if (this.groups.has(name)) {
       throw new Error(`Group already exists (${name})`);
     }
 
-    const group = new Group(name, this);
+    const group = new Group(name, this.markers, this.renderer, this.idGenerator);
     group.on('remove', () => {
       this.groups.delete(name);
       this.emit('remove', group);
@@ -87,6 +79,16 @@ export default class DOMHighlighter extends EventEmitter {
 
     this.groups.set(name, group);
     return group;
+  }
+
+  reset(): void {
+    this.groups.forEach(g => g.remove());
+    this.refresh();
+  }
+
+  clear(): void {
+    this.groups.forEach(g => g.clear());
+    this.refresh();
   }
 
   has(name: string): boolean {
@@ -100,6 +102,18 @@ export default class DOMHighlighter extends EventEmitter {
     }
 
     return group;
+  }
+
+  forEach(predicate: ForEachPredicate): void {
+    this.groups.forEach(g => g.forEach(predicate));
+  }
+
+  some(predicate: SomePredicate): boolean {
+    for (const [, grp] of this.groups) {
+      if (grp.some(predicate)) return true;
+    }
+
+    return false;
   }
 
   query(query: HighlightQuery, predicate: QueryPredicate): void {

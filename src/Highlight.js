@@ -3,9 +3,9 @@
 import EventEmitter from 'events';
 
 import type { XPath } from './typedefs';
+import { calculateBoundingRect } from './dom';
 import Group from './Group';
 import TextRange from './TextRange';
-import HighlightRenderer from './HighlightRenderer';
 
 export type HighlightJSON = XPath;
 
@@ -32,8 +32,8 @@ export default class Highlight extends EventEmitter {
     this.enabled = group.enabled;
   }
 
-  render(renderer: HighlightRenderer): Array<HTMLElement> {
-    const elements = renderer.surround(this);
+  render(): Array<HTMLElement> {
+    const elements = this.group.renderer.surround(this);
     return (this.elements = elements);
   }
 
@@ -69,6 +69,11 @@ export default class Highlight extends EventEmitter {
 
   setState(state: any): void {
     this.state = state;
+  }
+
+  calculateBounds(): DOMRect {
+    const bounds: any = this.elements.map(el => el.getBoundingClientRect());
+    return calculateBoundingRect(bounds);
   }
 
   toJSON(): HighlightJSON {
