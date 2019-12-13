@@ -2,16 +2,16 @@ parser:
   babel-eslint
 
 plugins:
+  - babel
   - flowtype
   - jest
-  - babel
   - import
 
 extends:
-  - plugin:jest/recommended
-  - plugin:flowtype/recommended
-  - plugin:import/recommended
   - eslint:recommended
+  - plugin:flowtype/recommended
+  - plugin:jest/recommended
+  - plugin:import/recommended
 
 env:
   browser: true
@@ -24,21 +24,26 @@ globals:
 
 # http://eslint.org/docs/rules/
 rules:
-  # Jest
+  #  Jest
+  # --------------------------------------------------
   jest/no-disabled-tests: 0
   jest/prefer-to-have-length: 0
-  # Flow
+  #  Flow
+  # --------------------------------------------------
   flowtype/define-flow-type: 1
   flowtype/use-flow-type: 1
-  # Babel
+  #  Babel
+  # --------------------------------------------------
   babel/new-cap: 0
   babel/object-curly-spacing: 0
   babel/no-invalid-this: 1
   babel/semi: 1
-  # Etc
+  #  JS
   # --------------------------------------------------
+  # - import
   import/order: ["warn", {
     "groups": ["builtin", "external", "parent", "internal", "sibling", "index"],
     "newlines-between": "always",
   }]
-  no-unused-vars: 1
+  # - etc
+  no-unused-vars: [1, { "argsIgnorePattern": "^_" }]
