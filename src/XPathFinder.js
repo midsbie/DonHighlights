@@ -3,7 +3,7 @@
 import type { XPathRange } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
-import TextNodeXPath from './TextNodeXPath';
+import XPathResolver from './XPathResolver';
 import TextRange from './TextRange';
 
 /**
@@ -27,8 +27,8 @@ export default class XPathFinder extends Finder {
 
     // Compute text node start and end elements that the XPath representation refers to.
     let end;
-    let xpath = new TextNodeXPath(this.content.root);
-    let start = xpath.elementAt(subject.start.xpath);
+    let resolver = new XPathResolver(this.content.root);
+    let start = resolver.elementAt(subject.start.xpath);
 
     // If an element could not be obtained from the XPath representation, abort now (messages will
     // have been output).
@@ -36,7 +36,7 @@ export default class XPathFinder extends Finder {
       return;
     }
 
-    end = xpath.elementAt(subject.end.xpath);
+    end = resolver.elementAt(subject.end.xpath);
     if (end === null) {
       return;
     }

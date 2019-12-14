@@ -114,7 +114,7 @@ export default class HighlightRenderer {
   _createHighlightElement(node: Node): HTMLElement {
     const span = document.createElement('span');
     // Stamp the highlight element with a data attribute that is expected to be unique to
-    // highlights produced by DOM Highlighter instances and which enables `TextNodeXPath` instances
+    // highlights produced by DOM Highlighter instances and which enables `XPathResolver` instances
     // to identify highlight elements when computing the _true_ XPath representation of an
     // arbitrary selection.  This is because it is not desirable at all for the computed XPath
     // representation to include highlight elements created by DOM Highlighter.

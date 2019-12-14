@@ -13,3 +13,4 @@ export { default as Highlight } from './Highlight';
 export { default as TextFinder } from './TextFinder';
 export { default as XPathFinder } from './XPathFinder';
 export { default as RangeTranslator } from './RangeTranslator';
+export { default as XPathResolver } from './XPathResolver';
