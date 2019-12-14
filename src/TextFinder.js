@@ -17,8 +17,8 @@ export default class TextFinder extends Finder {
    *
    * This method determines if a given value can be used to instantiate a `TextFinder` class.
    *
-   * @param {TextQuery} subject - Value to determine
-   * @returns {boolean} `true` if subject can be used to instantiate a `TextFinder` class
+   * @param {any} value - Value to determine
+   * @returns {boolean} `true` if value can be used to instantiate a `TextFinder` class
    */
   static isQuery(value: any): boolean {
     return typeof value === 'string' || value instanceof RegExp;

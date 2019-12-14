@@ -12,6 +12,20 @@ import TextRange from './TextRange';
  */
 export default class XPathFinder extends Finder {
   /**
+   * Determine if given value is of type accepted by the `XPathFinder` class
+   *
+   * This method determines if a given value can be used to instantiate a `XPathFinder` class.
+   *
+   * @param {any} value - Value to determine
+   * @returns {boolean} `true` if value can be used to instantiate a `XPathFinder` class
+   */
+  static isQuery(value: any): boolean {
+    // Should this be improved?  Currently not checking start and end are objects and of expected
+    // structure.
+    return typeof value === 'object' && value != null && value.start != null && value.end != null;
+  }
+
+  /**
    * Class constructor
    *
    * @param {TextContent} content - Reference to `TextContent` instance
