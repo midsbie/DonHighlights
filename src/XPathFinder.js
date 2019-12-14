@@ -33,12 +33,12 @@ export default class XPathFinder extends Finder {
     // If an element could not be obtained from the XPath representation, abort now (messages will
     // have been output).
     if (start === null) {
-      return;
+      throw new Error(`Unable to locate start element: ${subject.start.xpath}`);
     }
 
     end = resolver.elementAt(subject.end.xpath);
     if (end === null) {
-      return;
+      throw new Error(`Unable to locate end element: ${subject.end.xpath}`);
     }
 
     // Retrieve global character offset of the text node.
@@ -54,7 +54,7 @@ export default class XPathFinder extends Finder {
         subject.end.xpath,
         subject.end.offset
       );
-      return;
+      throw new Error('Unable to translate XPath range');
     }
 
     // Retrieve offset markers.
