@@ -44,8 +44,8 @@ export default class TextNodeVisitor {
     return node != null ? (this.current = this.nextText_(node)) : null;
   }
 
-  // Private interface
-  // -----------------
+  //  Private interface
+  // ----------------------------------------
   /**
    * Get next node
    *

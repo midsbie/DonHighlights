@@ -183,8 +183,8 @@ class Cursor extends EventEmitter {
     this.set(this.index + 1, false);
   }
 
-  // Private interface
-  // -----------------
+  //  Private interface
+  // ----------------------------------------
   /**
    * Clear the currently active cursor highlight
    *

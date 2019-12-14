@@ -56,7 +56,7 @@ export default class TextContent {
   parse(): void {
     this.text = '';
     let markers = (this.markers = []);
-    const offset = this.visit_(this.root, 0);
+    const offset = this._visit(this.root, 0);
 
     // Sanity check
     if (process.env.NODE_ENV === 'development') {
@@ -228,29 +228,6 @@ export default class TextContent {
     return this.markers[index];
   }
 
-  visit_(node: Node, offset: number): number {
-    // Only interested in text nodes
-    if (node.nodeType === 3) {
-      const content = node.nodeValue;
-      const length = content.length;
-
-      // Save reference to text node and store global offset in the markers array
-      this.markers.push({ node: node, offset: offset });
-      this.text += content;
-      return offset + length;
-    }
-
-    // If current node is not of type text, process its children nodes, if any.
-    const ch = node.childNodes;
-    if (ch.length > 0) {
-      for (let i = 0, l = ch.length; i < l; ++i) {
-        offset = this.visit_(ch[i], offset);
-      }
-    }
-
-    return offset;
-  }
-
   /**
    * Assert textual representation is valid
    *
@@ -271,5 +248,30 @@ export default class TextContent {
 
       offset += marker.node.nodeValue.length;
     }
+  }
+
+  //  Private interface
+  // ----------------------------------------
+  _visit(node: Node, offset: number): number {
+    // Only interested in text nodes
+    if (node.nodeType === 3) {
+      const content = node.nodeValue;
+      const length = content.length;
+
+      // Save reference to text node and store global offset in the markers array
+      this.markers.push({ node: node, offset: offset });
+      this.text += content;
+      return offset + length;
+    }
+
+    // If current node is not of type text, process its children nodes, if any.
+    const ch = node.childNodes;
+    if (ch.length > 0) {
+      for (let i = 0, l = ch.length; i < l; ++i) {
+        offset = this._visit(ch[i], offset);
+      }
+    }
+
+    return offset;
   }
 }

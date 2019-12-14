@@ -76,8 +76,8 @@ export default class HighlightRenderer {
     this.decorator.decorate(highlight.elements, highlight);
   }
 
-  // Private interface
-  // -----------------
+  //  Private interface
+  // ----------------------------------------
   /**
    * Truncate text node and apply highlighting
    *
