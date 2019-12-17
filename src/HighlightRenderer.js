@@ -39,36 +39,35 @@ export default class HighlightRenderer {
    */
   surround(highlight: Highlight): Array<HTMLElement> {
     const { start: rangeStart, end: rangeEnd } = highlight.range;
-    // Optimised case: highlighting does not span multiple nodes
+    let elements = [];
     if (rangeStart.marker.node === rangeEnd.marker.node) {
-      const elements = [this._surround(rangeStart, rangeStart.offset, rangeEnd.offset)];
+      // Optimised case: highlighting does not span multiple nodes
+      elements.push(this._surround(rangeStart, rangeStart.offset, rangeEnd.offset));
+    } else {
+      // Highlighting spans 2 or more nodes, which means we need to build a representation of all the
+      // text nodes contained in the start to end range, but excluding the start and end nodes
+      const visitor = new TextNodeVisitor(rangeStart.marker.node, this.content.root);
+      const end = rangeEnd.marker.node;
+      const coll = [];
+      // TODO: we assume `visitor.next()' will never return null because `end´ is within bounds
+      while (visitor.next() !== end) {
+        coll.push((visitor.current: any));
+      }
+
+      // Apply highlighting to start and end nodes, and to any nodes in between, if applicable.
+      // Highlighting for the start and end nodes may require text node truncation but not for the
+      // nodes in between.
+      elements.push(this._surround(rangeStart, rangeStart.offset, null));
+      // $FlowFixMe: unclear what the error is about; array is cleaned below anyhow.
+      coll.forEach(n => elements.push(this._surroundWhole(n)));
+      elements.push(this._surround(rangeEnd, 0, rangeEnd.offset));
+    }
+
+    elements = elements.filter(Boolean);
+    if (elements.length > 0) {
       highlight.range.clearStartOffset();
       this.decorator.decorate(elements, highlight);
-      return elements;
     }
-
-    // Highlighting spans 2 or more nodes, which means we need to build a representation of all the
-    // text nodes contained in the start to end range, but excluding the start and end nodes
-    const visitor = new TextNodeVisitor(rangeStart.marker.node, this.content.root);
-    const end = rangeEnd.marker.node;
-    const coll = [];
-    const elements = [];
-
-    // TODO: we assume `visitor.next()' will never return null because `end´ is within bounds
-    while (visitor.next() !== end) {
-      coll.push((visitor.current: any));
-    }
-
-    // Apply highlighting to start and end nodes, and to any nodes in between, if applicable.
-    // Highlighting for the start and end nodes may require text node truncation but not for the
-    // nodes in between.
-    elements.push(this._surround(rangeStart, rangeStart.offset, null));
-    coll.forEach(n => {
-      elements.push(this._surroundWhole(n));
-    });
-    elements.push(this._surround(rangeEnd, 0, rangeEnd.offset));
-    highlight.range.clearStartOffset();
-    this.decorator.decorate(elements, highlight);
     return elements;
   }
 
@@ -88,6 +87,8 @@ export default class HighlightRenderer {
    * @param {number} start - Start offset
    * @param {number | null} end - End offset
    * @param {string} className - CSS class name to apply
+   *
+   * @returns {?HTMLElement} Highlight element
    */
   _surround(descr: RangeDescriptor, start: number, end: number | null): HTMLElement {
     this.content.truncate(
@@ -95,8 +96,8 @@ export default class HighlightRenderer {
       start,
       end == null ? descr.marker.node.nodeValue.length - 1 : end
     );
-
-    return this._createHighlightElement(descr.marker.node);
+    // $FlowFixMe: always returning a highlight element
+    return this._createHighlightElement(descr.marker.node, true);
   }
 
   /**
@@ -106,12 +107,16 @@ export default class HighlightRenderer {
    *
    * @param {Node} node - Text node to apply highlighting to
    * @param {string} className - CSS class name to apply
+   *
+   * @returns {?HTMLElement} Highlight element
    * */
-  _surroundWhole(node: Node): HTMLElement {
+  _surroundWhole(node: Node): ?HTMLElement {
     return this._createHighlightElement(node);
   }
 
-  _createHighlightElement(node: Node): HTMLElement {
+  _createHighlightElement(node: Node, force?: boolean): ?HTMLElement {
+    if (!force && node.nodeValue.trim().length < 1) return null;
+
     const span = document.createElement('span');
     // Stamp the highlight element with a data attribute that is expected to be unique to
     // highlights produced by DOM Highlighter instances and which enables `XPathResolver` instances
