@@ -3,7 +3,7 @@
 import type { XPathRange } from './typedefs';
 import TextContent from './TextContent';
 import TextNodeVisitor from './TextNodeVisitor';
-import TextNodeXPath from './TextNodeXPath';
+import XPathResolver from './XPathResolver';
 import type { Marker } from './TextContent';
 
 export type RangeDescriptor = {| marker: Marker, offset: number |};
@@ -63,15 +63,15 @@ export default class TextRange {
   computeXPath(): XPathRange {
     const start = this.start.marker.node;
     const end = this.end.marker.node;
-    const computor = new TextNodeXPath(this.content.root);
+    const resolver = new XPathResolver(this.content.root);
     return {
       start: {
-        xpath: computor.xpathOf(start),
-        offset: this.start.offset + computor.offset(start),
+        xpath: resolver.xpathOf(start),
+        offset: this.start.offset + resolver.offset(start),
       },
       end: {
-        xpath: computor.xpathOf(end),
-        offset: this.end.offset + computor.offset(end) + 1,
+        xpath: resolver.xpathOf(end),
+        offset: this.end.offset + resolver.offset(end) + 1,
       },
     };
   }

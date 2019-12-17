@@ -112,4 +112,26 @@ describe('DOM Highlighter', function() {
     dh.clear();
     expect(count).toBe(counts.the);
   });
+
+  it('throws exception when XPath query fails', () => {
+    const group = dh.create('test');
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() =>
+      dh.query(
+        {
+          start: { xpath: '/path/to/nowhere', offset: 0 },
+          end: { xpath: '/path/to/nowhere', offset: 0 },
+        },
+        hit => group.highlight(hit)
+      )
+    ).toThrow();
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it('throws exception on invalid query', () => {
+    const group = dh.create('test');
+    expect(() => dh.query(({}: any), () => {})).toThrow();
+    expect(() => dh.query((12321: any), () => {})).toThrow();
+  });
 });

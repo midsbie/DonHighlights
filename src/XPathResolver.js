@@ -5,13 +5,13 @@ import { isHighlight } from './HighlightRenderer';
 export type XPathPart = {| tag: string, index: number |};
 
 /**
- * This class builds XPath representations of text nodes, optionally within a DOM sub-tree.  If a
+ * This class builds XPath representations of DOM elements, optionally within a sub-tree.  If a
  * root node is specified, the XPath produced will include the elements up to but **not** including
  * said root node.
  *
  * @param {DOMElement} [root=null] - Root DOM node
  */
-export default class TextNodeXPath {
+export default class XPathResolver {
   root: Node;
 
   constructor(root: Node) {
@@ -32,28 +32,36 @@ export default class TextNodeXPath {
   xpathOf(node: Node): string {
     // Note: no checks required since `indexOfText_´ throws exception if node invalid: null or not
     // like text.
-    let xpath = '/text()[' + this.indexOfText_(node) + ']';
+    const xpath = [];
 
-    // Skip all text or highlight container nodes
-    /* eslint-disable curly */
-    for (
-      node = (node.parentNode: any);
-      node != null && node !== this.root && this.isLikeText_(node);
-      node = node.parentNode
-    );
-    /* eslint-enable curly */
+    if (node.nodeType === 3) {
+      xpath.push('/text()[' + this.indexOfText_(node) + ']');
+
+      // Skip all text or highlight container nodes
+      /* eslint-disable curly */
+      for (
+        node = (node.parentNode: any);
+        node != null && node !== this.root && this.isLikeText_(node);
+        node = node.parentNode
+      );
+      /* eslint-enable curly */
+    }
 
     // Start traversing upwards from `node´'s parent node until we hit `root´ (or null)
-    for (; node != null && node !== this.root && node.nodeType === 1; node = node.parentNode) {
+    for (
+      ;
+      node != null && node !== this.root && node.nodeType === 1;
+      node = (node: any).parentNode
+    ) {
       const id = this.indexOfElement_(node);
-      xpath = '/' + node.nodeName.toLowerCase() + '[' + id + ']' + xpath;
+      xpath.push('/' + node.nodeName.toLowerCase() + '[' + id + ']');
     }
 
     if (node == null) {
       throw new Error("Specified node not within root's subtree");
     }
 
-    return xpath;
+    return xpath.reverse().join('');
   }
 
   /**
@@ -86,7 +94,7 @@ export default class TextNodeXPath {
       if (cur == null) {
         // This, we would hope, would be indicative that the tree mutated.  Otherwise, either this
         // algorithm is flawed or the reverse operation is.
-        console.error('failed to find nth child:', part, cur);
+        console.error('failed to find nth child:', xpath, parts, i);
         return null;
       }
     }
@@ -342,7 +350,7 @@ allowed.  Offending XPath representation: ${xpath}`
     // *Attempt* to retrieve element's index.  If an exception is thrown, produce a meaningful
     // error but re-throw since the XPath representation is clearly invalid.
     try {
-      // Note that `any` casts below are deliberate since we the code is within a try-catch block.
+      // Note that `any` casts below are deliberate since the code is within a try-catch block.
       const match = part.match(/([^[]+)\[(\d+)\]/);
       index = parseInt((match: any)[2], 10);
       matchedPart = (match: any)[1];
@@ -351,7 +359,7 @@ allowed.  Offending XPath representation: ${xpath}`
       }
     } catch (x) {
       console.error(`failed to extract child index: ${part}`);
-      throw x; /* Re-throw after dumping inspectable object. */
+      throw x;
     }
 
     return { tag: matchedPart.toLowerCase(), index };

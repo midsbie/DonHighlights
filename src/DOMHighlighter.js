@@ -127,7 +127,6 @@ export default class DOMHighlighter extends EventEmitter {
 
   query(query: QuerySubject, predicate: QueryPredicate): void {
     const finder = createFinder(this.content, query);
-
     let hit;
     while ((hit = finder.next()) != null) {
       predicate(hit);

@@ -3,7 +3,7 @@
 import type { XPathRange } from './typedefs';
 import TextContent from './TextContent';
 import Finder from './Finder';
-import TextNodeXPath from './TextNodeXPath';
+import XPathResolver from './XPathResolver';
 import TextRange from './TextRange';
 
 /**
@@ -11,6 +11,20 @@ import TextRange from './TextRange';
  * XPath representation and start and end offsets.
  */
 export default class XPathFinder extends Finder {
+  /**
+   * Determine if given value is of type accepted by the `XPathFinder` class
+   *
+   * This method determines if a given value can be used to instantiate a `XPathFinder` class.
+   *
+   * @param {any} value - Value to determine
+   * @returns {boolean} `true` if value can be used to instantiate a `XPathFinder` class
+   */
+  static isQuery(value: any): boolean {
+    // Should this be improved?  Currently not checking start and end are objects and of expected
+    // structure.
+    return typeof value === 'object' && value != null && value.start != null && value.end != null;
+  }
+
   /**
    * Class constructor
    *
@@ -27,18 +41,18 @@ export default class XPathFinder extends Finder {
 
     // Compute text node start and end elements that the XPath representation refers to.
     let end;
-    let xpath = new TextNodeXPath(this.content.root);
-    let start = xpath.elementAt(subject.start.xpath);
+    let resolver = new XPathResolver(this.content.root);
+    let start = resolver.elementAt(subject.start.xpath);
 
     // If an element could not be obtained from the XPath representation, abort now (messages will
     // have been output).
     if (start === null) {
-      return;
+      throw new Error(`Unable to locate start element: ${subject.start.xpath}`);
     }
 
-    end = xpath.elementAt(subject.end.xpath);
+    end = resolver.elementAt(subject.end.xpath);
     if (end === null) {
-      return;
+      throw new Error(`Unable to locate end element: ${subject.end.xpath}`);
     }
 
     // Retrieve global character offset of the text node.
@@ -54,7 +68,7 @@ export default class XPathFinder extends Finder {
         subject.end.xpath,
         subject.end.offset
       );
-      return;
+      throw new Error('Unable to translate XPath range');
     }
 
     // Retrieve offset markers.

@@ -5,6 +5,19 @@ import * as dom from './dom';
 export type Marker = {| node: Node, offset: number |};
 export type MarkerArray = Array<Marker>;
 
+const IGNORE_TAGNAMES = new Set([
+  'HTML',
+  'HEAD',
+  'META',
+  'SCRIPT',
+  'STYLE',
+  'CANVAS',
+  'IFRAME',
+  'SVG',
+  'AUDIO',
+  'VIDEO',
+]);
+
 /**
  * Class responsible for building and keeping a convenient representation
  * of the text present in an HTML DOM sub-tree.
@@ -56,7 +69,7 @@ export default class TextContent {
   parse(): void {
     this.text = '';
     let markers = (this.markers = []);
-    const offset = this.visit_(this.root, 0);
+    const offset = this._visit(this.root, 0);
 
     // Sanity check
     if (process.env.NODE_ENV === 'development') {
@@ -228,29 +241,6 @@ export default class TextContent {
     return this.markers[index];
   }
 
-  visit_(node: Node, offset: number): number {
-    // Only interested in text nodes
-    if (node.nodeType === 3) {
-      const content = node.nodeValue;
-      const length = content.length;
-
-      // Save reference to text node and store global offset in the markers array
-      this.markers.push({ node: node, offset: offset });
-      this.text += content;
-      return offset + length;
-    }
-
-    // If current node is not of type text, process its children nodes, if any.
-    const ch = node.childNodes;
-    if (ch.length > 0) {
-      for (let i = 0, l = ch.length; i < l; ++i) {
-        offset = this.visit_(ch[i], offset);
-      }
-    }
-
-    return offset;
-  }
-
   /**
    * Assert textual representation is valid
    *
@@ -271,5 +261,65 @@ export default class TextContent {
 
       offset += marker.node.nodeValue.length;
     }
+  }
+
+  //  Private interface
+  // ----------------------------------------
+  _visit(node: Node, offset: number): number {
+    // Only interested in text nodes
+    if (node.nodeType === 3) {
+      const content = node.nodeValue;
+      const length = content.length;
+
+      // Save reference to text node and store global offset in the markers array
+      this.markers.push({ node: node, offset: offset });
+
+      // Do not contain a literal representation of the text content of elements whose text is
+      // never rendered by the browser.  Instead, contain spaces such that we are able to carry out
+      // searches on the text using carefully crafted regular expressions that skip over text
+      // content which would otherwise cause some regexp searches to fail.  For an understanding of
+      // what is meant, consider the following subtree:
+      //
+      // <P>Positive
+      //   <SCRIPT>document.write('something');</SCRIPT>
+      // match</P>
+      //
+      // If the literal value ot the SCRIPT element above is included, we would end up with an
+      // internal text representation of the page as given:
+      //
+      // Positive
+      //   document.write('something');
+      // match
+      //
+      // This means that any attempt to perform a text search for `/positive\s+match/i`, would
+      // fail.  The solution, then, is to replace the content of nodes known never to render the
+      // literal representation of the text they contain by an _equal amount of spaces_.  The
+      // above becomes:
+      //
+      // Positive
+      //   ____________________________
+      // match
+      //
+      // /positive\s+match/i.test(this.text) => true
+      // Note: underscore character above illustrates original content replaced by spaces.
+      // --
+      // $FlowFixMe: parent node of a text node is guaranteed to exist and to be of element type.
+      if (IGNORE_TAGNAMES.has(node.parentElement.tagName)) {
+        this.text += ' '.repeat(length);
+      } else {
+        this.text += content;
+      }
+      return offset + length;
+    }
+
+    // If current node is not of type text, process its children nodes, if any.
+    const ch = node.childNodes;
+    if (ch.length > 0) {
+      for (let i = 0, l = ch.length; i < l; ++i) {
+        offset = this._visit(ch[i], offset);
+      }
+    }
+
+    return offset;
   }
 }
