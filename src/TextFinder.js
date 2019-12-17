@@ -24,6 +24,16 @@ export default class TextFinder extends Finder {
     return typeof value === 'string' || value instanceof RegExp;
   }
 
+  static normaliseStringForRegExp(query: string, whitespace: boolean = true): string {
+    return whitespace
+      ? query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+      : query.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
+  }
+
+  static createSafeRegExp(query: string, flags: string = 'gi'): RegExp {
+    return new RegExp(TextFinder.normaliseStringForRegExp(query), flags);
+  }
+
   /**
    * Class constructor
    *
@@ -36,10 +46,7 @@ export default class TextFinder extends Finder {
 
     // Build an array containing all hits of `subject´
     let match;
-    const re =
-      query instanceof RegExp
-        ? query
-        : new RegExp(query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
+    const re = query instanceof RegExp ? query : TextFinder.createSafeRegExp(query);
 
     while ((match = re.exec(this.content.text)) !== null) {
       // $FlowFixMe: erroring out on match below for some strange reason
