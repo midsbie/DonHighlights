@@ -5,6 +5,19 @@ import * as dom from './dom';
 export type Marker = {| node: Node, offset: number |};
 export type MarkerArray = Array<Marker>;
 
+const IGNORE_TAGNAMES = new Set([
+  'HTML',
+  'HEAD',
+  'META',
+  'SCRIPT',
+  'STYLE',
+  'CANVAS',
+  'IFRAME',
+  'SVG',
+  'AUDIO',
+  'VIDEO',
+]);
+
 /**
  * Class responsible for building and keeping a convenient representation
  * of the text present in an HTML DOM sub-tree.
@@ -260,7 +273,42 @@ export default class TextContent {
 
       // Save reference to text node and store global offset in the markers array
       this.markers.push({ node: node, offset: offset });
-      this.text += content;
+
+      // Do not contain a literal representation of the text content of elements whose text is
+      // never rendered by the browser.  Instead, contain spaces such that we are able to carry out
+      // searches on the text using carefully crafted regular expressions that skip over text
+      // content which would otherwise cause some regexp searches to fail.  For an understanding of
+      // what is meant, consider the following subtree:
+      //
+      // <P>Positive
+      //   <SCRIPT>document.write('something');</SCRIPT>
+      // match</P>
+      //
+      // If the literal value ot the SCRIPT element above is included, we would end up with an
+      // internal text representation of the page as given:
+      //
+      // Positive
+      //   document.write('something');
+      // match
+      //
+      // This means that any attempt to perform a text search for `/positive\s+match/i`, would
+      // fail.  The solution, then, is to replace the content of nodes known never to render the
+      // literal representation of the text they contain by an _equal amount of spaces_.  The
+      // above becomes:
+      //
+      // Positive
+      //   ____________________________
+      // match
+      //
+      // /positive\s+match/i.test(this.text) => true
+      // Note: underscore character above illustrates original content replaced by spaces.
+      // --
+      // $FlowFixMe: parent node of a text node is guaranteed to exist and to be of element type.
+      if (IGNORE_TAGNAMES.has(node.parentElement.tagName)) {
+        this.text += ' '.repeat(length);
+      } else {
+        this.text += content;
+      }
       return offset + length;
     }
 
