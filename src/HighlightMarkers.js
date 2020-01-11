@@ -72,7 +72,7 @@ class HighlightMarkers extends EventEmitter {
   remove(highlight: Highlight): boolean {
     const markers = this.markers;
 
-    for (let i = 0; i < markers.length; ) {
+    for (let i = 0; i < markers.length; ++i) {
       if (markers[i].highlight === highlight) {
         markers.splice(i, 1);
         this.debouncedEmit('update');
