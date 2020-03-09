@@ -47,6 +47,9 @@ export default class TextFinder extends Finder {
     // Build an array containing all hits of `subject´
     let match;
     const re = query instanceof RegExp ? query : TextFinder.createSafeRegExp(query);
+    if (!re.global) {
+      throw new Error("Regular expression's global flag not enabled");
+    }
 
     while ((match = re.exec(this.content.text)) !== null) {
       // $FlowFixMe: erroring out on match below for some strange reason
