@@ -14,7 +14,7 @@ import IdGenerator from './IdGenerator';
 import HighlightRenderer from './HighlightRenderer';
 import HighlightDecorator from './HighlightDecorator';
 
-type QueryPredicate = (hit: TextRange) => ?boolean;
+type QueryPredicate = (hit: TextRange) => any;
 
 export default class DOMHighlighter extends EventEmitter {
   container: HTMLElement;
@@ -129,7 +129,7 @@ export default class DOMHighlighter extends EventEmitter {
     const finder = createFinder(this.content, query);
     let hit;
     while ((hit = finder.next()) != null) {
-      if (!predicate(hit)) return false;
+      if (predicate(hit) === false) return false;
     }
     return true;
   }
