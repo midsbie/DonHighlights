@@ -47,7 +47,7 @@ export default class TextFinder extends Finder {
     return whitespace ? query.replace(/\s+/, '\\s+') : query;
   }
 
-  static createSafeRegExp(query: string, flags: string = 'gi'): RegExp {
+  static createSafeRegExp(query: string, flags: string = 'g'): RegExp {
     return new RegExp(TextFinder.normaliseStringForRegExp(query), flags);
   }
 
