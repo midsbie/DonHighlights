@@ -24,10 +24,27 @@ export default class TextFinder extends Finder {
     return typeof value === 'string' || value instanceof RegExp;
   }
 
+  /**
+   * Normalise query string for regular expression
+   *
+   * Escapes all special regex control characters present in a given query string so it may be used
+   * as a regular expression.  When `whitespace` is `true`, all whitespace characters are collapsed
+   * and matched as `\s+`.
+   *
+   * Example when `whitespace` is `true`:
+   * INPUT: "machine learning"
+   * OUTPUT: "machine\s+learning"
+   * MATCHES: "machine\tlearning", "machine  learning", "machine\t \nlearning"
+   *
+   * @param {string} query - Query string
+   * @param {boolean} whitespace - `true` causes whitespace characters to be collapsed to simple
+   * `\s+` match
+   *
+   * @returns {string} Regex-safe normalised query string
+   */
   static normaliseStringForRegExp(query: string, whitespace: boolean = true): string {
-    return whitespace
-      ? query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
-      : query.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
+    query = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
+    return whitespace ? query.replace(/\s+/, "\\s+") : query;
   }
 
   static createSafeRegExp(query: string, flags: string = 'gi'): RegExp {
