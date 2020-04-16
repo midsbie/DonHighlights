@@ -14,3 +14,4 @@ export { default as TextFinder } from './TextFinder';
 export { default as XPathFinder } from './XPathFinder';
 export { default as RangeTranslator } from './RangeTranslator';
 export { default as XPathResolver } from './XPathResolver';
+export { default as TextRange } from './TextRange';
