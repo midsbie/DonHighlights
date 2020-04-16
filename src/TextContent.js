@@ -212,11 +212,7 @@ export default class TextContent {
       return -1;
     }
 
-    for (
-      let i = start == null ? 0 : start, l = this.markers.length;
-      i < l;
-      ++i // eslint-disable-line indent
-    ) {
+    for (let i = start == null ? 0 : start, l = this.markers.length; i < l; ++i) {
       if (this.markers[i].node === element) {
         return i;
       }
@@ -239,6 +235,24 @@ export default class TextContent {
     }
 
     return this.markers[index];
+  }
+
+  /**
+   * Extract string starting at given offset
+   *
+   * @param {number} offset - Offset to start string extraction
+   * @param {number} len - Length of string to extract
+   *
+   * @returns {string} Extracted string
+   */
+  substr(offset: number, len: number): string {
+    if (offset < 0 || offset >= this.text.length) {
+      throw new Error('Invalid start offset');
+    } else if (len < 0) {
+      throw new Error('Invalid length');
+    }
+
+    return this.text.substr(offset, len);
   }
 
   /**

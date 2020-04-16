@@ -107,4 +107,8 @@ export default class TextRange {
 
     return length;
   }
+
+  toString(): string {
+    return this.content.substr(this.start.marker.offset + this.start.offset, this.length());
+  }
 }
