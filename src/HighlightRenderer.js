@@ -66,8 +66,10 @@ export default class HighlightRenderer {
     elements = elements.filter(Boolean);
     if (elements.length > 0) {
       highlight.range.clearStartOffset();
+      // $FlowFixMe: guaranteed not to contain nulls
       this.decorator.decorate(elements, highlight);
     }
+    // $FlowFixMe: guaranteed not to contain nulls
     return elements;
   }
 
