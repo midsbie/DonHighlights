@@ -34,7 +34,7 @@ export default class Finder {
    * more matches are available.
    */
   // $FlowFixMe: below signature is needed in specialized classes
-  next(): TextRange | null {
+  next(): ?TextRange {
     util.abstract();
   }
 

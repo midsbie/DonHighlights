@@ -130,6 +130,7 @@ export default class DOMHighlighter extends EventEmitter {
     let hit;
     let idx = 0;
     while ((hit = finder.next()) != null) {
+      // $FlowFixMe: not accounting for hit != null check above
       if (predicate(hit, idx++) === false) return false;
     }
     return true;

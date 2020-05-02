@@ -91,7 +91,7 @@ export default class XPathFinder extends Finder {
    * @returns {TextRange | null} Returns a `TextRange` if a match is available, or `null` if no
    * more matches are available.
    */
-  next(): TextRange | null {
+  next(): ?TextRange {
     if (this.current >= this.results.length) {
       return null;
     }
