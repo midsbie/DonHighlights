@@ -1,14 +1,14 @@
 // @flow
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 
-import * as dom from './dom';
-import HighlightMarkers from './HighlightMarkers';
-import HighlightDecorator from './HighlightDecorator';
-import Highlight from './Highlight';
+import * as dom from "./dom";
+import HighlightMarkers from "./HighlightMarkers";
+import HighlightDecorator from "./HighlightDecorator";
+import Highlight from "./Highlight";
 
 export type IterableQueries = string | Array<string>;
-export type ScrollToCallback = HTMLElement => void;
+export type ScrollToCallback = (HTMLElement) => void;
 
 /**
  * Class responsible for managing the state of the highlight cursor
@@ -37,7 +37,7 @@ class Cursor extends EventEmitter {
 
     this.markers = markers;
     this.decorator = decorator;
-    markers.on('update', () => this.update());
+    markers.on("update", () => this.update());
 
     this.index = -1;
     this.active = null;
@@ -57,7 +57,7 @@ class Cursor extends EventEmitter {
     this.clearActive_();
     this.index = -1;
     this.update(true);
-    this.emit('clear');
+    this.emit("clear");
   }
 
   /**
@@ -75,14 +75,14 @@ class Cursor extends EventEmitter {
   setIterableQueries(queries: ?IterableQueries): void {
     if (queries == null) {
       this.iterableQueries = null;
-    } else if (typeof queries === 'string') {
+    } else if (typeof queries === "string") {
       this.iterableQueries = [queries];
     } else {
       this.iterableQueries = queries.slice();
     }
 
     this.clear();
-    this.emit('setiterable', queries);
+    this.emit("setiterable", queries);
   }
 
   /**
@@ -99,7 +99,7 @@ class Cursor extends EventEmitter {
 
     if (force || total !== this.total) {
       this.total = total;
-      this.emit('update', this.index, this.total);
+      this.emit("update", this.index, this.total);
     }
   }
 
@@ -115,7 +115,7 @@ class Cursor extends EventEmitter {
    */
   set(index: number, dontRecurse: boolean, scrollTo?: ScrollToCallback): boolean {
     if (index < 0) {
-      throw new Error('Invalid cursor index specified: ' + index);
+      throw new Error("Invalid cursor index specified: " + index);
     }
 
     const marker = this.markers.find(index, this.iterableQueries);
@@ -136,11 +136,11 @@ class Cursor extends EventEmitter {
       this.decorator.setActive(this.active);
 
       const first = coll[0];
-      if (typeof scrollTo === 'function') {
+      if (typeof scrollTo === "function") {
         try {
           scrollTo(first);
         } catch (x) {
-          console.error('failed to scroll to highlight:', x);
+          console.error("failed to scroll to highlight:", x);
         }
       } else if (!dom.isInView(first)) {
         first.scrollIntoView();
@@ -152,7 +152,7 @@ class Cursor extends EventEmitter {
     }
 
     this.index = index;
-    this.emit('update', index, this.total);
+    this.emit("update", index, this.total);
     return true;
   }
 

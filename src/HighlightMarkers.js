@@ -1,10 +1,10 @@
 // @flow
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 
-import Group from './Group';
-import Highlight from './Highlight';
-import { groupNamesToGroupSet } from './util';
+import Group from "./Group";
+import Highlight from "./Highlight";
+import { groupNamesToGroupSet } from "./util";
 
 export type Marker = {|
   highlight: Highlight,
@@ -66,7 +66,7 @@ class HighlightMarkers extends EventEmitter {
       0,
       { highlight, offset }
     );
-    this.debouncedEmit('update');
+    this.debouncedEmit("update");
   }
 
   remove(highlight: Highlight): boolean {
@@ -75,7 +75,7 @@ class HighlightMarkers extends EventEmitter {
     for (let i = 0; i < markers.length; ++i) {
       if (markers[i].highlight === highlight) {
         markers.splice(i, 1);
-        this.debouncedEmit('update');
+        this.debouncedEmit("update");
         return true;
       }
     }
@@ -96,7 +96,7 @@ class HighlightMarkers extends EventEmitter {
       }
     }
 
-    if (count > 0) this.debouncedEmit('update');
+    if (count > 0) this.debouncedEmit("update");
     return count;
   }
 
@@ -133,7 +133,7 @@ class HighlightMarkers extends EventEmitter {
     const groups = groupNames == null ? null : groupNamesToGroupSet(groupNames, this.groups);
     let marker: Marker | null = null;
 
-    this.markers.some(m => {
+    this.markers.some((m) => {
       const g = m.highlight.group;
       // Group must be enabled and highlight active.  Note that highlights are never active
       // in non-browser environments, in which case highlights are assumed to be active.

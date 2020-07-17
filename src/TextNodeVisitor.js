@@ -17,7 +17,7 @@ export default class TextNodeVisitor {
   constructor(node: Node, root: ?Node) {
     if (root == null) {
       if (document.body == null) {
-        throw new Error('document body not defined');
+        throw new Error("document body not defined");
       }
 
       this.root = document.body;
@@ -36,7 +36,7 @@ export default class TextNodeVisitor {
   next(): ?Node {
     const cur = this.current;
     if (cur == null || cur.nodeType !== 3) {
-      throw new Error('No current node or not text node');
+      throw new Error("No current node or not text node");
     }
 
     // Using `any` below to silence flow because of sanity check above
@@ -57,7 +57,7 @@ export default class TextNodeVisitor {
   nextNode_(node: Node | null): ?Node {
     // Abort if invalid or root node; otherwise attempt to advance to sibling node
     if (node == null) {
-      throw new Error('Invalid state: outside of root sub-tree');
+      throw new Error("Invalid state: outside of root sub-tree");
     } else if (node === this.root) {
       return null;
     } else if (node.nextSibling != null) {

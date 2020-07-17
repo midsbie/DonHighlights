@@ -1,9 +1,9 @@
 // @flow
 
-import * as util from './util';
-import TextContent from './TextContent';
-import TextRange from './TextRange';
-import type { RangeDescriptor } from './TextRange';
+import * as util from "./util";
+import TextContent from "./TextContent";
+import TextRange from "./TextRange";
+import type { RangeDescriptor } from "./TextRange";
 
 /**
  * Abstract base class of all finder classes
@@ -50,7 +50,7 @@ export default class Finder {
   getAt_(offset: number): RangeDescriptor {
     const index = this.content.indexOf(offset);
     if (index === -1) {
-      throw new Error('Failed to retrieve marker for offset: ' + offset);
+      throw new Error("Failed to retrieve marker for offset: " + offset);
     }
 
     return TextRange.descriptorAbs(this.content.at(index), offset);

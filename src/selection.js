@@ -1,6 +1,6 @@
 // @flow
 
-import { findPreviousTextNode, findLastTextNode } from './dom';
+import { findPreviousTextNode, findLastTextNode } from "./dom";
 
 export type RangeBoundaryPoint = {| node: Node, offset: number |};
 
@@ -12,7 +12,7 @@ export function getNormalizedStartBoundaryPoint(range: Range): RangeBoundaryPoin
   if (node.nodeType !== Node.TEXT_NODE) {
     node = node.childNodes[offset];
     if (node == null) {
-      throw new Error('[InvalidNodeTypeError] Invalid start container');
+      throw new Error("[InvalidNodeTypeError] Invalid start container");
     }
   }
 
@@ -35,7 +35,7 @@ export function getNormalizedStartBoundaryPoint(range: Range): RangeBoundaryPoin
  */
 function skipEndWhitespace(node: Node, offset: number): RangeBoundaryPoint {
   if (node.nodeType !== Node.TEXT_NODE) {
-    throw new Error('Start node not text type');
+    throw new Error("Start node not text type");
   }
 
   // If the start node selection (thus up to nth char given by offset) contains non-whitespace
@@ -63,7 +63,7 @@ function skipEndWhitespace(node: Node, offset: number): RangeBoundaryPoint {
     it = findPreviousTextNode(it);
   }
 
-  throw new Error('No previous text nodes or content is whitespace');
+  throw new Error("No previous text nodes or content is whitespace");
 }
 
 export function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint {
@@ -116,7 +116,7 @@ export function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint 
   // [0] https://dom.spec.whatwg.org/#concept-range-bp-set
   // [1] in `./StarringSelectionNormalizer.testcases.js`
   if (offset > length) {
-    throw new Error('[InvalidNodeTypeError] Invalid end container');
+    throw new Error("[InvalidNodeTypeError] Invalid end container");
   } else if (offset === length) {
     // Attempt to find the last available text node as required by the normalizer, but do not fail
     // if not possible.
@@ -132,7 +132,7 @@ export function getNormalizedEndBoundaryPoint(range: Range): RangeBoundaryPoint 
     // No text in the end container is selected so find previous text node and select its contents.
     node = findPreviousTextNode(node);
     if (node == null) {
-      throw new Error('[InvalidNodeTypeError] Invalid end container');
+      throw new Error("[InvalidNodeTypeError] Invalid end container");
     }
     offset = node.textContent.length;
   } else {

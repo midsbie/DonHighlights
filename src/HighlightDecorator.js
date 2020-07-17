@@ -1,6 +1,6 @@
 // @flow
 
-import Highlight from './Highlight';
+import Highlight from "./Highlight";
 
 export default class HighlightDecorator {
   decorate(elements: Array<HTMLElement>, hl: Highlight): void {
@@ -8,10 +8,10 @@ export default class HighlightDecorator {
 
     for (const el of elements) {
       el.dataset.dhHighlightId = hl.id;
-      el.classList.add('dh-highlight', groupClass);
+      el.classList.add("dh-highlight", groupClass);
 
-      if (hl.enabled) el.classList.remove('dh-disabled');
-      else el.classList.add('dh-disabled');
+      if (hl.enabled) el.classList.remove("dh-disabled");
+      else el.classList.add("dh-disabled");
     }
   }
 

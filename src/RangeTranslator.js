@@ -1,11 +1,11 @@
 // @flow
 
-import merge from 'merge';
+import merge from "merge";
 
-import * as selection from './selection';
-import DOMHighlighter from './DOMHighlighter';
-import TextContent from './TextContent';
-import TextRange from './TextRange';
+import * as selection from "./selection";
+import DOMHighlighter from "./DOMHighlighter";
+import TextContent from "./TextContent";
+import TextRange from "./TextRange";
 
 /**
  * Support for translation of arbitrary ranges
@@ -42,12 +42,12 @@ export default class RangeTranslator {
       start = selection.getNormalizedStartBoundaryPoint(range);
       end = selection.getNormalizedEndBoundaryPoint(range);
     } catch (x) {
-      console.error('unable to compute boundary points:', x);
+      console.error("unable to compute boundary points:", x);
       return null;
     }
 
     if (start.node.nodeType !== Node.TEXT_NODE || end.node.nodeType !== Node.TEXT_NODE) {
-      console.info('selection anchor or focus node(s) not text: ignoring');
+      console.info("selection anchor or focus node(s) not text: ignoring");
       return null;
     }
 
@@ -70,7 +70,7 @@ export default class RangeTranslator {
     const endOffset = start.node === end.node ? startOffset : this.content.find(end.node);
     if (startOffset < 0 || endOffset < 0) {
       console.error(
-        'unable to retrieve offset of selection anchor or focus node(s):',
+        "unable to retrieve offset of selection anchor or focus node(s):",
         range.startContainer,
         start.node,
         range.endContainer,

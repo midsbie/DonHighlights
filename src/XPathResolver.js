@@ -1,6 +1,6 @@
 // @flow
 
-import { isHighlight } from './HighlightRenderer';
+import { isHighlight } from "./HighlightRenderer";
 
 export type XPathPart = {| tag: string, index: number |};
 
@@ -35,7 +35,7 @@ export default class XPathResolver {
     const xpath = [];
 
     if (node.nodeType === 3) {
-      xpath.push('/text()[' + this.indexOfText_(node) + ']');
+      xpath.push("/text()[" + this.indexOfText_(node) + "]");
 
       // Skip all text or highlight container nodes
       /* eslint-disable curly */
@@ -54,14 +54,14 @@ export default class XPathResolver {
       node = (node: any).parentNode
     ) {
       const id = this.indexOfElement_(node);
-      xpath.push('/' + node.nodeName.toLowerCase() + '[' + id + ']');
+      xpath.push("/" + node.nodeName.toLowerCase() + "[" + id + "]");
     }
 
     if (node == null) {
       throw new Error("Specified node not within root's subtree");
     }
 
-    return xpath.reverse().join('');
+    return xpath.reverse().join("");
   }
 
   /**
@@ -75,14 +75,14 @@ export default class XPathResolver {
    * @returns {Node | null} The element referenced by the XPath string or `null` if not found
    * */
   elementAt(xpath: string): Node | null {
-    const parts = xpath.split('/');
+    const parts = xpath.split("/");
     let part;
     let cur = this.root; /* start from the root node */
 
     // At an absolute minimum, a XPath representation must be of the form: /text(), which results
     // in `parts´ having a length of 2.
     if (parts[0].length !== 0 || parts.length < 2) {
-      throw new Error('Invalid XPath representation');
+      throw new Error("Invalid XPath representation");
     }
 
     // Break up the constituent parts of the XPath representation but discard the first element
@@ -94,7 +94,7 @@ export default class XPathResolver {
       if (cur == null) {
         // This, we would hope, would be indicative that the tree mutated.  Otherwise, either this
         // algorithm is flawed or the reverse operation is.
-        console.error('failed to find nth child:', xpath, parts, i);
+        console.error("failed to find nth child:", xpath, parts, i);
         return null;
       }
     }
@@ -110,10 +110,10 @@ allowed.  Offending XPath representation: ${xpath}`
 
     part = this.xpathPart_(parts[i]);
     // Casting `cur` to `any` because we check above after mutation and return if `null`
-    cur = part.tag === 'text()' ? this.nthTextOf_((cur: any), part.index) : null;
+    cur = part.tag === "text()" ? this.nthTextOf_((cur: any), part.index) : null;
 
     if (cur == null || cur.nodeType !== 3) {
-      console.error('element at specified XPath NOT a text node:', xpath, part, cur);
+      console.error("element at specified XPath NOT a text node:", xpath, part, cur);
       return null;
     }
 
@@ -142,7 +142,7 @@ allowed.  Offending XPath representation: ${xpath}`
     let offset = 0;
 
     if (node == null || node.nodeType !== 3) {
-      throw new Error('Invalid or no text node specified');
+      throw new Error("Invalid or no text node specified");
     }
 
     /* eslint-disable no-constant-condition */
@@ -152,7 +152,7 @@ allowed.  Offending XPath representation: ${xpath}`
       while ((node: any).previousSibling == null) {
         node = (node: any).parentNode;
         if (node === this.root || node == null) {
-          throw new Error('Invalid state: expected highlight container or text node');
+          throw new Error("Invalid state: expected highlight container or text node");
         } else if (!isHighlight(node)) {
           return offset;
         } else if (node.previousSibling != null) {
@@ -236,7 +236,7 @@ allowed.  Offending XPath representation: ${xpath}`
    */
   indexOfElement_(node: Node): number {
     if (this.isLikeText_(node)) {
-      throw new Error('No node specified or node of text type');
+      throw new Error("No node specified or node of text type");
     }
 
     const name = node.nodeName.toLowerCase();
@@ -285,7 +285,7 @@ allowed.  Offending XPath representation: ${xpath}`
    */
   indexOfText_(node: Node): number {
     if (!this.isLikeText_(node)) {
-      throw new Error('No node specified or not of text type');
+      throw new Error("No node specified or not of text type");
     }
 
     let index = 1;
@@ -342,7 +342,7 @@ allowed.  Offending XPath representation: ${xpath}`
     let index;
 
     // If no index specified: assume first
-    if (part.indexOf('[') === -1) {
+    if (part.indexOf("[") === -1) {
       return { tag: part.toLowerCase(), index: 0 };
     }
 
@@ -355,7 +355,7 @@ allowed.  Offending XPath representation: ${xpath}`
       index = parseInt((match: any)[2], 10);
       matchedPart = (match: any)[1];
       if (--index < 0) {
-        throw new Error('Invalid index: ' + index);
+        throw new Error("Invalid index: " + index);
       }
     } catch (x) {
       console.error(`failed to extract child index: ${part}`);
@@ -431,7 +431,7 @@ allowed.  Offending XPath representation: ${xpath}`
           ch = node.childNodes;
           if (ch.length === 0 || !this.isLikeText_(ch[0])) {
             throw new Error(
-              'Invalid state: expected text node or highlight container inside container'
+              "Invalid state: expected text node or highlight container inside container"
             );
           }
 

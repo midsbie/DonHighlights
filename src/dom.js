@@ -3,7 +3,7 @@
 // --
 
 export type Position = {| x: number, y: number |};
-export type ForEachNodeCallback = Node => boolean;
+export type ForEachNodeCallback = (Node) => boolean;
 
 export function insertBefore(newNode: Node, beforeNode: Node): Node {
   (beforeNode.parentNode: any).insertBefore(newNode, beforeNode);
@@ -39,7 +39,7 @@ export function visitDOM(node: Node, callback: ForEachNodeCallback): boolean {
       return true;
     }
   } catch (x) {
-    console.error('exception raised while executing visitor callback:', x);
+    console.error("exception raised while executing visitor callback:", x);
   }
 
   if (node.nodeType === Node.TEXT_NODE) {
@@ -86,7 +86,7 @@ export function findPreviousTextNode(fromNode: Node): ?Node {
  */
 export function findLastTextNode(container: HTMLElement): Node | null {
   let lastTextNode = null;
-  visitDOM(container, node => {
+  visitDOM(container, (node) => {
     if (node.nodeType === Node.TEXT_NODE) {
       lastTextNode = node;
     }
@@ -115,7 +115,7 @@ export function calculateBoundingRect(rects: Array<DOMRect>): DOMRect {
   let x1 = rect.right;
   let y1 = rect.bottom;
 
-  rects.forEach(r => {
+  rects.forEach((r) => {
     if (r.left < x0) x0 = r.left;
     if (r.top < y0) y0 = r.top;
     if (r.right > x1) x1 = r.right;

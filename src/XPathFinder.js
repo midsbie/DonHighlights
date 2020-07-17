@@ -1,10 +1,10 @@
 // @flow
 
-import type { XPathRange } from './typedefs';
-import TextContent from './TextContent';
-import Finder from './Finder';
-import XPathResolver from './XPathResolver';
-import TextRange from './TextRange';
+import type { XPathRange } from "./typedefs";
+import TextContent from "./TextContent";
+import Finder from "./Finder";
+import XPathResolver from "./XPathResolver";
+import TextRange from "./TextRange";
 
 /**
  * Class responsible for locating text in a `TextContent` instance from an
@@ -22,7 +22,7 @@ export default class XPathFinder extends Finder {
   static isQuery(value: any): boolean {
     // Should this be improved?  Currently not checking start and end are objects and of expected
     // structure.
-    return typeof value === 'object' && value != null && value.start != null && value.end != null;
+    return typeof value === "object" && value != null && value.start != null && value.end != null;
   }
 
   /**
@@ -36,7 +36,7 @@ export default class XPathFinder extends Finder {
     super(content);
 
     if (subject.start.offset < 0 || subject.end.offset < 0) {
-      throw new Error('Invalid or no XPath object specified');
+      throw new Error("Invalid or no XPath object specified");
     }
 
     // Compute text node start and end elements that the XPath representation refers to.
@@ -60,7 +60,7 @@ export default class XPathFinder extends Finder {
     end = content.find(end);
     if (start < 0 || end < 0) {
       console.error(
-        'unable to derive global offsets: %d:%d [xpath=%s:%s to end=%s:%s]',
+        "unable to derive global offsets: %d:%d [xpath=%s:%s to end=%s:%s]",
         start,
         end,
         subject.start.xpath,
@@ -68,7 +68,7 @@ export default class XPathFinder extends Finder {
         subject.end.xpath,
         subject.end.offset
       );
-      throw new Error('Unable to translate XPath range');
+      throw new Error("Unable to translate XPath range");
     }
 
     // Retrieve offset markers.
@@ -78,7 +78,7 @@ export default class XPathFinder extends Finder {
     /* console.log("DEBUG start = ", start, "end = ", end, subject); */
 
     if (start > end) {
-      throw new Error('Invalid XPath representation: start > end');
+      throw new Error("Invalid XPath representation: start > end");
     }
 
     // Save global character offset and relative start and end offsets in descriptor.
@@ -98,7 +98,7 @@ export default class XPathFinder extends Finder {
 
     const subject: any = this.results[this.current];
     if (subject == null) {
-      throw new Error('Subject not found');
+      throw new Error("Subject not found");
     }
     ++this.current;
 

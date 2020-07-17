@@ -1,12 +1,12 @@
 // @flow
 
-import merge from 'merge';
+import merge from "merge";
 
-import type { IIdGenerator } from './interfaces';
-import DOMHighlighter from './DOMHighlighter';
-import type { IHighlightDecorator } from './Highlight';
-import IdGenerator from './IdGenerator';
-import HighlightDecorator from './HighlightDecorator';
+import type { IIdGenerator } from "./interfaces";
+import DOMHighlighter from "./DOMHighlighter";
+import type { IHighlightDecorator } from "./Highlight";
+import IdGenerator from "./IdGenerator";
+import HighlightDecorator from "./HighlightDecorator";
 
 export type Options = {|
   container?: HTMLElement,
@@ -24,8 +24,8 @@ export default function createHighlighter(
   let options;
   if (containerOrOptions == null) {
     options = { container: document.body };
-  } else if (typeof containerOrOptions !== 'object') {
-    throw new Error('Invalid options specified');
+  } else if (typeof containerOrOptions !== "object") {
+    throw new Error("Invalid options specified");
   } else if (containerOrOptions.nodeType == null) {
     options = containerOrOptions;
   } else {
@@ -33,7 +33,7 @@ export default function createHighlighter(
   }
 
   if (options.container == null || options.container.nodeType !== Node.ELEMENT_NODE) {
-    throw new Error('Container must be an HTML element node');
+    throw new Error("Container must be an HTML element node");
   }
   options = merge({}, defaultOptions, options);
 

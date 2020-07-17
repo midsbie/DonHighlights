@@ -1,11 +1,11 @@
 // @flow
 
-import merge from 'merge';
+import merge from "merge";
 
-import type { TextQuery } from './typedefs';
-import TextContent from './TextContent';
-import Finder from './Finder';
-import TextRange from './TextRange';
+import type { TextQuery } from "./typedefs";
+import TextContent from "./TextContent";
+import Finder from "./Finder";
+import TextRange from "./TextRange";
 
 /* FIXME: create a class for matching of regular expression subjects. */
 /**
@@ -21,7 +21,7 @@ export default class TextFinder extends Finder {
    * @returns {boolean} `true` if value can be used to instantiate a `TextFinder` class
    */
   static isQuery(value: any): boolean {
-    return typeof value === 'string' || value instanceof RegExp;
+    return typeof value === "string" || value instanceof RegExp;
   }
 
   /**
@@ -43,11 +43,11 @@ export default class TextFinder extends Finder {
    * @returns {string} Regex-safe normalised query string
    */
   static normaliseStringForRegExp(query: string, whitespace: boolean = true): string {
-    query = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
-    return whitespace ? query.replace(/\s+/g, '\\s+') : query;
+    query = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
+    return whitespace ? query.replace(/\s+/g, "\\s+") : query;
   }
 
-  static createSafeRegExp(query: string, flags: string = 'gi'): RegExp {
+  static createSafeRegExp(query: string, flags: string = "gi"): RegExp {
     return new RegExp(TextFinder.normaliseStringForRegExp(query), flags);
   }
 

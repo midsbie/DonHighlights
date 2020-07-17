@@ -1,21 +1,21 @@
 // @flow
 
-import * as dom from './dom';
+import * as dom from "./dom";
 
 export type Marker = {| node: Node, offset: number |};
 export type MarkerArray = Array<Marker>;
 
 const IGNORE_TAGNAMES = new Set([
-  'HTML',
-  'HEAD',
-  'META',
-  'SCRIPT',
-  'STYLE',
-  'CANVAS',
-  'IFRAME',
-  'SVG',
-  'AUDIO',
-  'VIDEO',
+  "HTML",
+  "HEAD",
+  "META",
+  "SCRIPT",
+  "STYLE",
+  "CANVAS",
+  "IFRAME",
+  "SVG",
+  "AUDIO",
+  "VIDEO",
 ]);
 
 /**
@@ -34,12 +34,12 @@ export default class TextContent {
    */
   constructor(root: HTMLElement) {
     this.root = root;
-    this.text = '';
+    this.text = "";
     this.markers = [];
   }
 
   dispose(): void {
-    this.text = '';
+    this.text = "";
     this.markers = [];
   }
 
@@ -67,16 +67,16 @@ export default class TextContent {
    * Should only be invoked when the HTML structure mutates, e.g. a new document is loaded.
    * */
   parse(): void {
-    this.text = '';
+    this.text = "";
     let markers = (this.markers = []);
     const offset = this._visit(this.root, 0);
 
     // Sanity check
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       if (this.markers.length !== 0) {
         const marker = markers[markers.length - 1];
         if (offset - marker.node.nodeValue.length !== marker.offset) {
-          throw new Error('Invalid state detected: offset mismatch');
+          throw new Error("Invalid state detected: offset mismatch");
         }
       }
     }
@@ -111,10 +111,10 @@ export default class TextContent {
 
     // Sanity checks
     if (start < 0 || end < 0 || start > end) {
-      throw new Error('Invalid truncation parameters');
+      throw new Error("Invalid truncation parameters");
     } else if (end >= text.length) {
       console.error(index, start, end, text, old, marker);
-      throw new Error('End offset overflow');
+      throw new Error("End offset overflow");
     }
 
     // Chars 0..start - 1
@@ -144,7 +144,7 @@ export default class TextContent {
     // Chars end + 1..length
     if (end !== text.length - 1) {
       if (index >= this.markers.length) {
-        throw new Error('Detected invalid index');
+        throw new Error("Detected invalid index");
       }
 
       // We're again creating a new text node out of the old text node and thus need to add a new
@@ -155,7 +155,7 @@ export default class TextContent {
       });
     }
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       this.assert();
     }
 
@@ -192,7 +192,7 @@ export default class TextContent {
     if (markers[min].offset <= offset) {
       return min;
     } else if (min === 0) {
-      throw new Error('Invalid offset of text content state');
+      throw new Error("Invalid offset of text content state");
     }
 
     return min - 1;
@@ -231,7 +231,7 @@ export default class TextContent {
    */
   at(index: number): Marker {
     if (index < 0 || index >= this.markers.length) {
-      throw new Error('Invalid marker index');
+      throw new Error("Invalid marker index");
     }
 
     return this.markers[index];
@@ -247,9 +247,9 @@ export default class TextContent {
    */
   substr(offset: number, len: number): string {
     if (offset < 0 || offset >= this.text.length) {
-      throw new Error('Invalid start offset');
+      throw new Error("Invalid start offset");
     } else if (len < 0) {
-      throw new Error('Invalid length');
+      throw new Error("Invalid length");
     }
 
     return this.text.substr(offset, len);
@@ -269,8 +269,8 @@ export default class TextContent {
       const marker = this.markers[i];
 
       if (marker.offset !== offset) {
-        console.error('invalid offset: %d@ %d:%d ->', i, marker.offset, offset, marker);
-        throw new Error('Halting due to invalid offset');
+        console.error("invalid offset: %d@ %d:%d ->", i, marker.offset, offset, marker);
+        throw new Error("Halting due to invalid offset");
       }
 
       offset += marker.node.nodeValue.length;
@@ -319,7 +319,7 @@ export default class TextContent {
       // --
       // $FlowFixMe: parent node of a text node is guaranteed to exist and to be of element type.
       if (IGNORE_TAGNAMES.has(node.parentElement.tagName)) {
-        this.text += ' '.repeat(length);
+        this.text += " ".repeat(length);
       } else {
         this.text += content;
       }

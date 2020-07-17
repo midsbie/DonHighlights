@@ -1,10 +1,10 @@
 // @flow
 
-import type { QuerySubject } from './typedefs';
-import TextContent from './TextContent';
-import Finder from './Finder';
-import TextFinder from './TextFinder';
-import XPathFinder from './XPathFinder';
+import type { QuerySubject } from "./typedefs";
+import TextContent from "./TextContent";
+import Finder from "./Finder";
+import TextFinder from "./TextFinder";
+import XPathFinder from "./XPathFinder";
 
 /**
  * Construct appropriate `Finder`-derived class for a given subject
@@ -20,5 +20,5 @@ export default function createFinder(content: TextContent, query: QuerySubject):
   if (TextFinder.isQuery(query)) return new TextFinder(content, (query: any));
   else if (XPathFinder.isQuery(query)) return new XPathFinder(content, (query: any));
 
-  throw new Error('Unknown or invalid query');
+  throw new Error("Unknown or invalid query");
 }

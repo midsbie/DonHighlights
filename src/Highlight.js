@@ -1,11 +1,11 @@
 // @flow
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 
-import type { XPathRange } from './typedefs';
-import { calculateBoundingRect } from './dom';
-import Group from './Group';
-import TextRange from './TextRange';
+import type { XPathRange } from "./typedefs";
+import { calculateBoundingRect } from "./dom";
+import Group from "./Group";
+import TextRange from "./TextRange";
 
 export type HighlightJSON = XPathRange;
 
@@ -55,7 +55,7 @@ export default class Highlight extends EventEmitter {
       el.remove();
     }
 
-    this.emit('remove', this);
+    this.emit("remove", this);
   }
 
   isActive(): boolean {
@@ -85,7 +85,7 @@ export default class Highlight extends EventEmitter {
   }
 
   calculateBounds(): DOMRect {
-    const bounds: any = this.elements.map(el => el.getBoundingClientRect());
+    const bounds: any = this.elements.map((el) => el.getBoundingClientRect());
     return calculateBoundingRect(bounds);
   }
 

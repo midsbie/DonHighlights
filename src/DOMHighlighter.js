@@ -1,18 +1,18 @@
 // @flow
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 
-import type { QuerySubject } from './typedefs';
-import type { ForEachPredicate, SomePredicate } from './interfaces';
-import createFinder from './createFinder';
-import TextContent from './TextContent';
-import HighlightMarkers from './HighlightMarkers';
-import Group from './Group';
-import Cursor from './Cursor';
-import TextRange from './TextRange';
-import IdGenerator from './IdGenerator';
-import HighlightRenderer from './HighlightRenderer';
-import HighlightDecorator from './HighlightDecorator';
+import type { QuerySubject } from "./typedefs";
+import type { ForEachPredicate, SomePredicate } from "./interfaces";
+import createFinder from "./createFinder";
+import TextContent from "./TextContent";
+import HighlightMarkers from "./HighlightMarkers";
+import Group from "./Group";
+import Cursor from "./Cursor";
+import TextRange from "./TextRange";
+import IdGenerator from "./IdGenerator";
+import HighlightRenderer from "./HighlightRenderer";
+import HighlightDecorator from "./HighlightDecorator";
 
 type QueryPredicate = (hit: TextRange, index: number) => any;
 
@@ -72,25 +72,25 @@ export default class DOMHighlighter extends EventEmitter {
     }
 
     const group = new Group(name, this.markers, this.renderer, this.idGenerator);
-    group.on('remove', () => {
+    group.on("remove", () => {
       this.groups.delete(name);
-      this.emit('remove', group);
+      this.emit("remove", group);
     });
 
-    group.on('highlight', hl => this.emit('highlight', hl));
-    group.on('unhighlight', hl => this.emit('unhighlight', hl));
+    group.on("highlight", (hl) => this.emit("highlight", hl));
+    group.on("unhighlight", (hl) => this.emit("unhighlight", hl));
 
     this.groups.set(name, group);
     return group;
   }
 
   reset(): void {
-    this.groups.forEach(g => g.remove());
+    this.groups.forEach((g) => g.remove());
     this.refresh();
   }
 
   clear(): void {
-    this.groups.forEach(g => g.clear());
+    this.groups.forEach((g) => g.clear());
     this.refresh();
   }
 
@@ -109,12 +109,12 @@ export default class DOMHighlighter extends EventEmitter {
 
   count(): number {
     let count = 0;
-    this.groups.forEach(g => (count += g.highlights.size));
+    this.groups.forEach((g) => (count += g.highlights.size));
     return count;
   }
 
   forEach(predicate: ForEachPredicate): void {
-    this.groups.forEach(g => g.forEach(predicate));
+    this.groups.forEach((g) => g.forEach(predicate));
   }
 
   some(predicate: SomePredicate): boolean {

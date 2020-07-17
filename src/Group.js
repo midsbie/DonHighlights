@@ -1,14 +1,14 @@
 // @flow
 
-import EventEmitter from 'events';
+import EventEmitter from "events";
 
-import type { ForEachPredicate, SomePredicate } from './interfaces';
-import HighlightMarkers from './HighlightMarkers';
-import HighlightRenderer from './HighlightRenderer';
-import IdGenerator from './IdGenerator';
-import TextRange from './TextRange';
-import Highlight from './Highlight';
-import type { HighlightJSON } from './Highlight';
+import type { ForEachPredicate, SomePredicate } from "./interfaces";
+import HighlightMarkers from "./HighlightMarkers";
+import HighlightRenderer from "./HighlightRenderer";
+import IdGenerator from "./IdGenerator";
+import TextRange from "./TextRange";
+import Highlight from "./Highlight";
+import type { HighlightJSON } from "./Highlight";
 
 export type GroupJSON = {|
   name: string,
@@ -35,7 +35,7 @@ export default class Group extends EventEmitter {
     this.markers = markers;
     this.renderer = renderer;
     this.idGenerator = idGenerator;
-    this.id = name.replace(/[^a-z0-9-]/gi, '_');
+    this.id = name.replace(/[^a-z0-9-]/gi, "_");
     this.name = name;
     this.enabled = true;
     this.highlights = new Map();
@@ -51,7 +51,7 @@ export default class Group extends EventEmitter {
 
   setEnabled(enabled: boolean): void {
     if (this.enabled !== enabled) {
-      this.highlights.forEach(hl => {
+      this.highlights.forEach((hl) => {
         hl.setEnabled(enabled);
         this.renderer.decorate(hl);
       });
@@ -79,15 +79,15 @@ export default class Group extends EventEmitter {
       // nop
     }
 
-    hl.on('remove', () => {
+    hl.on("remove", () => {
       this.highlights.delete(hl.id);
-      this.emit('unhighlight', hl);
+      this.emit("unhighlight", hl);
     });
 
     hl.render();
     this.highlights.set(hl.id, hl);
     this.markers.add(hl);
-    this.emit('highlight', hl);
+    this.emit("highlight", hl);
   }
 
   highlight(range: TextRange): Highlight {
@@ -105,12 +105,12 @@ export default class Group extends EventEmitter {
 
   remove(): void {
     this.markers.removeGroup(this);
-    this.highlights.forEach(hl => hl.remove());
-    this.emit('remove', this);
+    this.highlights.forEach((hl) => hl.remove());
+    this.emit("remove", this);
   }
 
   clear(): void {
-    this.highlights.forEach(hl => hl.remove());
+    this.highlights.forEach((hl) => hl.remove());
   }
 
   forEach(predicate: ForEachPredicate): void {

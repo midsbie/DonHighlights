@@ -1,10 +1,10 @@
 // @flow
 
-import type { XPathRange } from './typedefs';
-import TextContent from './TextContent';
-import TextNodeVisitor from './TextNodeVisitor';
-import XPathResolver from './XPathResolver';
-import type { Marker } from './TextContent';
+import type { XPathRange } from "./typedefs";
+import TextContent from "./TextContent";
+import TextNodeVisitor from "./TextNodeVisitor";
+import XPathResolver from "./XPathResolver";
+import type { Marker } from "./TextContent";
 
 export type RangeDescriptor = {| marker: Marker, offset: number |};
 
@@ -48,7 +48,7 @@ export default class TextRange {
 
     // Sanity check:
     if (start.marker.offset + start.offset > end.marker.offset + end.offset) {
-      throw new Error('Invalid range: start > end');
+      throw new Error("Invalid range: start > end");
     }
 
     this.start = start;
