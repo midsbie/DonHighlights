@@ -49,7 +49,7 @@ export default class Highlight extends EventEmitter {
         // If the highlight element does not have a parent node, then we assume it does not exist in
         // the DOM anymore.
         if (el.parentNode == null) break;
-        el.parentNode.insertBefore(child, el);
+        (el.parentNode: any).insertBefore(child, el);
       }
 
       el.remove();
