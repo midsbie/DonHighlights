@@ -46,7 +46,10 @@ export default class Highlight extends EventEmitter {
     for (const el of this.elements) {
       let child;
       while ((child = el.childNodes[0]) != null) {
-        (el.parentNode: any).insertBefore(child, el);
+        // If the highlight element does not have a parent node, then we assume it does not exist in
+        // the DOM anymore.
+        if (el.parentNode == null) break;
+        el.parentNode.insertBefore(child, el);
       }
 
       el.remove();
@@ -56,7 +59,17 @@ export default class Highlight extends EventEmitter {
   }
 
   isActive(): boolean {
-    if (!this.enabled || !this.group.enabled || this.elements.length < 1) return false;
+    // Not active if group it belongs to or itself is not enabled, has zero elements or not all of
+    // its elements have a parent node.
+    if (
+      !this.enabled ||
+      !this.group.enabled ||
+      this.elements.length < 1 ||
+      !this.elements.every((el) => el.parentNode != null)
+    ) {
+      return false;
+    }
+
     // A highlight is considered to be active if its first (and usually only) element possesses
     // height and width greater than 0.
     const bbox = this.elements[0].getBoundingClientRect();
