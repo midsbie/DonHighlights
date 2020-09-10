@@ -61,7 +61,7 @@ export default class DOMHighlighter extends EventEmitter {
     // element untouched as some websites (like cnn.com) may be sensitive to changes to the
     // content, which could lead to breakage on the page.
     if (this.container.nodeType === Node.DOCUMENT_NODE && (this.container: any).body != null) {
-      this.container.body.normalize();
+      (this.container: any).body.normalize();
     } else {
       this.container.normalize();
     }
