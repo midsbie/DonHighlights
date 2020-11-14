@@ -43,7 +43,7 @@ export default class TextFinder extends Finder {
    * @returns {string} Regex-safe normalised query string
    */
   static normaliseStringForRegExp(query: string, whitespace: boolean = true): string {
-    query = query.replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
+    query = query.trim().replace(/[-[\]{}()*+?.,\\^$|#]/g, "\\$&");
     return whitespace ? query.replace(/\s+/g, "\\s+") : query;
   }
 
