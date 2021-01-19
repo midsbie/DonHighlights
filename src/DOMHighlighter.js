@@ -55,21 +55,35 @@ export default class DOMHighlighter extends EventEmitter {
     this.refresh();
   }
 
-  refresh(): void {
-    // Forcefully normalise text nodes but take care to make sure that we're _only_ normalizing the
-    // BODY element when the container element is a document.  It is important to leave the HEAD
-    // element untouched as some websites (like cnn.com) may be sensitive to changes to the
-    // content, which could lead to breakage on the page.
-    if (this.container.nodeType === Node.DOCUMENT_NODE && (this.container: any).body != null) {
-      (this.container: any).body.normalize();
-    } else {
-      this.container.normalize();
-    }
+  /**
+   * Refresh internal document representation
+   *
+   * Important to note that normalisation of text nodes is not automatically carried out because it
+   * was found to be breaking pages that held on to element and text node references that became
+   * invalid _after_ normalisation.  Only normalise when the content is known not to break.
+   */
+  refresh(normalise: boolean = false): void {
+    if (normalise) this.normalise();
 
     if (this.content.root !== this.container) {
       this.content.setRoot(this.container);
     } else {
       this.content.parse();
+    }
+  }
+
+  /**
+   * Normalise text nodes
+   *
+   * Normalisation makes sure that _only_ the BODY element is normalised when the container element
+   * is a document.  It is important to leave the HEAD element untouched as some websites (like
+   * cnn.com) may be sensitive to changes to the content, which could lead to breakage on the page.
+   */
+  normalise(): void {
+    if (this.container.nodeType === Node.DOCUMENT_NODE && (this.container: any).body != null) {
+      (this.container: any).body.normalize();
+    } else {
+      this.container.normalize();
     }
   }
 
