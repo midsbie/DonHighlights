@@ -3,21 +3,21 @@
 import merge from "merge";
 
 import * as selection from "./selection";
-import DOMHighlighter from "./DOMHighlighter";
+import DonHighlights from "./DonHighlights";
 import TextContent from "./TextContent";
 import TextRange from "./TextRange";
 
 /**
  * Support for translation of arbitrary ranges
  *
- * This class is an extension of DOM Highlighter which provides support for translation of
+ * This class is an extension of Don Highlights which provides support for translation of
  * arbitrary browser `Range` instances to internal `TextRange` ones, which can be used to compute
  * XPath descriptors or create highlights.
  */
 export default class RangeTranslator {
   content: TextContent;
 
-  static fromDOMHighlighter(instance: DOMHighlighter): RangeTranslator {
+  static fromDonHighlights(instance: DonHighlights): RangeTranslator {
     return new RangeTranslator(instance.content);
   }
 

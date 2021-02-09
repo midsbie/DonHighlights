@@ -1,6 +1,6 @@
 // @flow
 
-import DOMHighlighter from "../src/DOMHighlighter";
+import DonHighlights from "../src/DonHighlights";
 import TextFinder from "../src/TextFinder";
 
 import { instance } from "./helpers";

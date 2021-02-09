@@ -16,7 +16,7 @@ import HighlightDecorator from "./HighlightDecorator";
 
 type QueryPredicate = (hit: TextRange, index: number) => any;
 
-export default class DOMHighlighter extends EventEmitter {
+export default class DonHighlights extends EventEmitter {
   container: HTMLElement;
   cursor: Cursor;
   content: TextContent;

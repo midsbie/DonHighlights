@@ -1,6 +1,6 @@
 // @flow
 
-import DOMHighlighter from '../src/DOMHighlighter';
+import DonHighlights from '../src/DonHighlights';
 import Group from '../src/Group';
 import Highlight from '../src/Highlight';
 import TextRange from '../src/TextRange';
@@ -8,7 +8,7 @@ import TextRange from '../src/TextRange';
 import { instance, attest, tests, counts } from './helpers';
 
 describe('Highlight', function() {
-  let dh: DOMHighlighter, group, fauxTextRange;
+  let dh: DonHighlights, group, fauxTextRange;
 
   beforeEach(() => {
     dh = instance.init();

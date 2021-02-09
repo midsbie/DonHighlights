@@ -1,12 +1,12 @@
 // @flow
 
-import DOMHighlighter from '../src/DOMHighlighter';
+import DonHighlights from '../src/DonHighlights';
 import Group from '../src/Group';
 
 import { instance, attest, tests, counts } from './helpers';
 
 describe('Group', function() {
-  let dh: DOMHighlighter, group: Group;
+  let dh: DonHighlights, group: Group;
 
   beforeEach(() => {
     dh = instance.init();

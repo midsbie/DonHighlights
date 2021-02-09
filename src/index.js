@@ -7,7 +7,7 @@ export { default as createFinder } from "./createFinder";
 export { getSelectorForHighlightId } from "./dom";
 export * from "./HighlightRenderer"; // skipping default
 
-export { default as DOMHighlighter } from "./DOMHighlighter";
+export { default as DonHighlights } from "./DonHighlights";
 export { default as Group } from "./Group";
 export { default as Highlight } from "./Highlight";
 export { default as TextFinder } from "./TextFinder";

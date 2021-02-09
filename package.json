@@ -1,6 +1,6 @@
 {
-  "name": "dom-highlighter",
-  "title": "DOM Highlighter",
+  "name": "don-highlights",
+  "title": "Don Highlights",
   "description": "Versatile library enabling highlighting of arbitrary phrases in live web pages",
   "version": "1.0.0-rc1",
   "main": "lib/dom-highlighter.js",

@@ -3,7 +3,7 @@
 import merge from "merge";
 
 import type { IIdGenerator } from "./interfaces";
-import DOMHighlighter from "./DOMHighlighter";
+import DonHighlights from "./DonHighlights";
 import type { IHighlightDecorator } from "./Highlight";
 import IdGenerator from "./IdGenerator";
 import HighlightDecorator from "./HighlightDecorator";
@@ -20,7 +20,7 @@ const defaultOptions: Options = {
 
 export default function createHighlighter(
   containerOrOptions?: HTMLElement | Options
-): DOMHighlighter {
+): DonHighlights {
   let options;
   if (containerOrOptions == null) {
     options = { container: document.body };
@@ -37,7 +37,7 @@ export default function createHighlighter(
   }
   options = merge({}, defaultOptions, options);
 
-  return new DOMHighlighter(
+  return new DonHighlights(
     options.container,
     options.idGenerator || new IdGenerator(),
     options.decorator || new HighlightDecorator()

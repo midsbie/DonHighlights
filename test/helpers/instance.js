@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-use-before-define */
 
-import { createHighlighter, DOMHighlighter } from '../../src';
+import { createHighlighter, DonHighlights } from '../../src';
 
 import { documents } from './tests';
 
@@ -16,7 +16,7 @@ export function assertJsDOM() {
   }
 }
 
-export function init(ndx: number = 0, options?: Object): DOMHighlighter {
+export function init(ndx: number = 0, options?: Object): DonHighlights {
   assertJsDOM();
 
   const data = documents[ndx || 0];
@@ -36,7 +36,7 @@ export function querySelectorAll(selector: string): NodeList<HTMLElement> {
   return getContainer().querySelectorAll(selector);
 }
 
-export function getInstance(): DOMHighlighter {
+export function getInstance(): DonHighlights {
   if (!instance) throw new Error('Highlighter not instantiated');
   return instance;
 }

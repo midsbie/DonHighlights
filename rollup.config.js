@@ -103,7 +103,7 @@ export default [
     output: {
       file: 'dist/dom-highlighter.js',
       format: 'umd',
-      name: 'DOM Highlighter',
+      name: 'Don Highlights',
       indent: false,
     },
     plugins: [
@@ -127,7 +127,7 @@ export default [
     output: {
       file: 'dist/dom-highlighter.min.js',
       format: 'umd',
-      name: 'DOM Highlighter',
+      name: 'Don Highlights',
       indent: false,
     },
     plugins: [

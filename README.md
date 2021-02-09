@@ -1,3 +1,3 @@
-# DOM Highlighter
+# Don Highlights
 
 TODO
