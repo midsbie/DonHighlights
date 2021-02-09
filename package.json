@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/miguel-guedes/dom-highlighter.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.softgeist.com"
+  },
   "keywords": ["dom", "web", "highlighting", "highlights", "highlighter"],
   "author": "Miguel Guedes <miguel.a.guedes@gmail.com> (https://github.com/miguel-guedes)",
   "license": "MIT",
