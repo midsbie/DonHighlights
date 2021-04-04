@@ -24,7 +24,7 @@ export default [
   // CommonJS
   {
     input,
-    output: { file: 'lib/dom-highlighter.js', format: 'cjs', indent: false },
+    output: { file: 'lib/don-highlights.js', format: 'cjs', indent: false },
     external: makeExternalPredicate([
       ...Object.keys(pkg.dependencies || {}),
       ...Object.keys(pkg.peerDependencies || {}),
@@ -44,7 +44,7 @@ export default [
   // ES
   {
     input,
-    output: { file: 'es/dom-highlighter.js', format: 'es', indent: false },
+    output: { file: 'es/don-highlights.js', format: 'es', indent: false },
     external: makeExternalPredicate([
       ...Object.keys(pkg.dependencies || {}),
       ...Object.keys(pkg.peerDependencies || {}),
@@ -66,7 +66,7 @@ export default [
   // ES for Browsers
   {
     input,
-    output: { file: 'es/dom-highlighter.mjs', format: 'es', indent: false },
+    output: { file: 'es/don-highlights.mjs', format: 'es', indent: false },
     plugins: [
       nodeResolve({
         extensions,
@@ -101,7 +101,7 @@ export default [
   {
     input,
     output: {
-      file: 'dist/dom-highlighter.js',
+      file: 'dist/don-highlights.js',
       format: 'umd',
       name: 'Don Highlights',
       indent: false,
@@ -125,7 +125,7 @@ export default [
   {
     input,
     output: {
-      file: 'dist/dom-highlighter.min.js',
+      file: 'dist/don-highlights.min.js',
       format: 'umd',
       name: 'Don Highlights',
       indent: false,

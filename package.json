@@ -3,13 +3,13 @@
   "title": "Don Highlights",
   "description": "Versatile library enabling highlighting of arbitrary phrases in live web pages",
   "version": "1.0.0-rc1",
-  "main": "lib/dom-highlighter.js",
-  "unpkg": "dist/dom-highlighter.js",
-  "module": "es/dom-highlighter.js",
+  "main": "lib/don-highlights.js",
+  "unpkg": "dist/don-highlights.js",
+  "module": "es/don-highlights.js",
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miguel-guedes/dom-highlighter.git"
+    "url": "git+https://github.com/miguel-guedes/don-highlights.git"
   },
   "publishConfig": {
     "registry": "https://npm.softgeist.com"
@@ -18,7 +18,7 @@
   "author": "Miguel Guedes <miguel.a.guedes@gmail.com> (https://github.com/miguel-guedes)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/miguel-guedes/dom-highlighter.git/issues"
+    "url": "https://github.com/miguel-guedes/don-highlights.git/issues"
   },
   "scripts": {
     "upgrade": "yarn upgrade-interactive --latest",
@@ -27,7 +27,7 @@
     "clean": "rimraf coverage dist es lib junit.xml yarn-error.log",
     "test": "jest",
     "build": "rollup -c && yarn run build:flow",
-    "build:flow": "echo \"// @flow\\n\\nexport * from '../src';\" > lib/dom-highlighter.js.flow",
+    "build:flow": "echo \"// @flow\\n\\nexport * from '../src';\" > lib/don-highlights.js.flow",
     "watch": "rollup -c --watch",
     "check:flow": "flow",
     "check:lint": "yarn run check:lint:src",
