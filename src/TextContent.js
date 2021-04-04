@@ -105,15 +105,14 @@ export default class TextContent {
    * @returns {number} Index of marker descriptor
    */
   truncate(marker: Marker, start: number, end: number): number {
-    const text = marker.node.nodeValue;
+    const old = marker.node; // The old text node
+    const text = old.nodeValue;
     let index = this.indexOf(marker.offset);
-    let old = marker.node; // The old text node
 
     // Sanity checks
     if (start < 0 || end < 0 || start > end) {
       throw new Error("Invalid truncation parameters");
     } else if (end >= text.length) {
-      console.error(index, start, end, text, old, marker);
       throw new Error("End offset overflow");
     }
 
@@ -124,7 +123,7 @@ export default class TextContent {
       // to the markers array
       this.markers.splice(index, 0, {
         offset: marker.offset,
-        node: dom.insertBefore(node, marker.node),
+        node: dom.insertBefore(node, old),
       });
 
       ++index;
@@ -284,6 +283,13 @@ export default class TextContent {
     if (node.nodeType === 3) {
       const content = node.nodeValue;
       const length = content.length;
+
+      // Do NOT record this node if it is empty.  Not doing so leads to one or more duplicate
+      // markers in the registry pointing to the same offset, which then may cause problems
+      // when highlighting.
+      //
+      // Motivated by ticket: https://gitlab.softgeist.com/com/sceptiq/-/issues/755
+      if (length < 1) return offset;
 
       // Save reference to text node and store global offset in the markers array
       this.markers.push({ node: node, offset: offset });
