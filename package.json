@@ -2,7 +2,7 @@
   "name": "don-highlights",
   "title": "Don Highlights",
   "description": "Versatile library enabling highlighting of arbitrary phrases in live web pages",
-  "version": "1.0.0-rc1",
+  "version": "1.0.1",
   "main": "lib/don-highlights.js",
   "unpkg": "dist/don-highlights.js",
   "module": "es/don-highlights.js",
