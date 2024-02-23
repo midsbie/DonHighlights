@@ -38,9 +38,9 @@
     "check:fmt:json": "prettier --parser json '**/package.json' --check",
     "check:fmt:md": "prettier --parser markdown '**/*.md' --check",
     "fix:fmt": "yarn run fix:fmt:js; yarn run fix:fmt:json; yarn run fix:fmt:md",
-    "fix:fmt:js": "yarn run check:fmt:js --write",
-    "fix:fmt:json": "yarn run check:fmt:json --write",
-    "fix:fmt:md": "yarn run check:fmt:md --write"
+    "fix:fmt:js": "yarn run check:fmt:js -- --write",
+    "fix:fmt:json": "yarn run check:fmt:json -- --write",
+    "fix:fmt:md": "yarn run check:fmt:md -- --write"
   },
   "files": ["dist/*", "es/*", "lib/*", "src/*"],
   "dependencies": {
