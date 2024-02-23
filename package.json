@@ -9,7 +9,7 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miguel-guedes/don-highlights.git"
+    "url": "git+https://github.com/midsbie/don-highlights.git"
   },
   "publishConfig": {
     "registry": "https://npm.softgeist.com"
