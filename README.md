@@ -216,8 +216,6 @@ create. All contributions are greatly appreciated.
 
 Distributed under the MIT License. See LICENSE for more information.
 
----
-
 [^1]:
     The original repository is no longer available but it had also been released under the MIT
     license.
