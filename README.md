@@ -4,9 +4,9 @@ Don Highlights is a JavaScript library designed to facilitate the creation, mana
 interaction of text highlights within live web pages. It enables developers to programmatically
 highlight text within a specified HTML container element with ease.
 
-This library is an evolution of an earlier project that I previously developed to integrate with a
-backend to create machine-inferred highlights using a browser extension as a front-end. This
-original repository, now unavailable, was also released under the MIT license.
+This library represents the evolution of an earlier project, which I also developed. The initial
+project focused on integrating with a backend to create machine-inferred highlights, utilizing a
+browser extension as the front-end interface[^1].
 
 ## Features
 
@@ -215,3 +215,9 @@ create. All contributions are greatly appreciated.
 ## License
 
 Distributed under the MIT License. See LICENSE for more information.
+
+---
+
+[^1]:
+    The original repository is no longer available but it had also been released under the MIT
+    license.
